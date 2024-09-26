@@ -1,5 +1,5 @@
-git clone https://github.com/fufu-2345/react_template.git
-cd react_template
+git clone https://github.com/fufu-2345/projectNumer.git
+cd projectNumer
 npm install
 
 ---

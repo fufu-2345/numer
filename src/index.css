@@ -1,9 +1,9 @@
 html, body {
-  
+    background-color: rgb(60, 223, 255);
 }
 
-/*               .= class   #=id                  */
-
 body{
-
+    .test{
+        font-size: 40px;
+    }
 }
