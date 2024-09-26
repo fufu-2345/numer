@@ -1,5 +1,5 @@
-git clone https://github.com/fufu-2345/projectNumer.git
-cd projectNumer
+git clone https://github.com/fufu-2345/numer.git
+cd numer
 npm install
 
 ---
