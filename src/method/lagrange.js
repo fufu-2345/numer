@@ -1,83 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { BlockMath } from 'react-katex';
+import React, {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
+import {BlockMath} from 'react-katex';
 
-const MatrixInputSize = ({ setMatrixSize }) => {
+let matrix = [];
+
+const MatrixInputSize=({setMatrixSize})=>{
   return (
     <input
       type="number"
       defaultValue={2}
-      onChange={(e) => {
+      onChange={(e)=>{
+        const min=2,max=8;
+        const value=Math.max(min,Math.min(max,e.target.value));
+        e.target.value=value;
 
-        let min=2,max=8;
-        if(e.target.value<min){
-          e.target.value=min;
-        }
-        else if(e.target.value>max){
-          e.target.value=max;
-        }
-
-        const rows = parseInt(e.target.value);
-        if (min <= rows && rows <= max) {
-          setMatrixSize((prevSize) => ({
-            ...prevSize,
-            rows: rows,
-          }));
-        }
+        const rows=parseInt(value);
+        setMatrixSize((prevSize)=>({
+          ...prevSize,
+          rows: rows,
+        }));
       }}
     />
   );
 };
 
-const MatrixRow = ({ children }) => {
+const MatrixRow=({children})=>{
   return <div style={{ display: 'flex' }}>{children}</div>;
 };
 
-const MatrixInput = ({ matrixSize, setMatrix }) => {
+const MatrixInput = ({ matrixSize, setMatrix, checkboxVal }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     let count = 0;
-    const matrix = Array(matrixSize.rows)
-      .fill(0)
-      .map(() => Array(matrixSize.columns).fill(0));
+    const matrix = Array.from({ length: matrixSize.rows }, () =>
+      Array(matrixSize.columns).fill(0)
+    );
 
-    for (let i = 0; i < matrixSize.rows; i++) {
-      for (let j = 0; j < matrixSize.columns; j++) {
+    for (let i=0;i<matrixSize.rows;i++) {
+      for (let j=0;j<matrixSize.columns;j++) {
         matrix[i][j] =
           !isNaN(parseFloat(event.target[count].value)) ? parseFloat(event.target[count].value) : 0;
         count += 1;
-        
       }
     }
+
     setMatrix(matrix);
+    callar(42000);
   };
 
-  let matrix = Array.from({ length: matrixSize.rows }, () =>
-    new Array(matrixSize.columns).fill(0)
-  );
+  const callar=(x) => {
+    let a=0, n=0;
+    let arr=[];
 
-
-  function  calLar(x){
-    let a=0,n=matrixSize;
-    for(let i=0;i<n;i++){
+    for (let i=0;i<matrixSize.rows+1;i++) {
+      if(checkboxVal[i]){
+        arr.push(i);
+        n++;
+      }
+    }
+    console.log(arr);
+    
+    
+    for(let i=0;i<n;i++) {
       let temp=1;
-      for(let j=0;j<n;j++){
-        if(j!=i){
-          temp*=(matrix[0][j]-x)/(matrix[0][j]-matrix[0][i]);
+      for(let j=0;j<n;j++) {
+        if(j!==i) {
+          temp*= (      matrix[0][arr[j]] - x )   /   ( matrix[0][arr[j]] - matrix[0][arr[i]]     ); ///err
         }
       }
-      a+=temp*x[1][i];
+      if (matrix[1] && matrix[1][arr[i]] !== undefined) {
+        a+=temp*matrix[1][arr[i]];
+      }
     }
     console.log(a);
-    return a;
-  }
-
+  };
 
   return (
     <form onSubmit={handleSubmit}>
-      {matrix.map((row, indexRow) => (
+      {Array.from({ length: matrixSize.rows }, (_, indexRow) => (
         <MatrixRow key={indexRow}>
-          {row.map((item, indexColumn) => (
+          {Array.from({ length: matrixSize.columns }, (_, indexColumn) => (
             <input
               key={`${indexRow}-${indexColumn}`}
               type="text"
@@ -87,75 +89,60 @@ const MatrixInput = ({ matrixSize, setMatrix }) => {
           ))}
         </MatrixRow>
       ))}
-      <button type="submit" /*onClick="callar(42000)"*/>{"Calculated"}</button>
+      <button type="submit">{"Calculated"}</button>
     </form>
   );
 };
 
-
-
-
 const App = () => {
   const [matrixSize, setMatrixSize] = useState({ rows: 2, columns: 2 });
   const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
-  const [checkboxVal, setcheckboxVal]=useState(Array({matrixSize}).fill(false));
-  const [latexMatrix, setLatexMatrix] = useState(
-    "\\begin{pmatrix}\n 0 & 0\\\\\n 0 & 0\n \\end{pmatrix}"
-  );
-  let index;
+  const [checkboxVal, setCheckboxVal] = useState(Array(matrixSize.rows).fill(false));
 
   useEffect(() => {
-    setcheckboxVal(Array(matrixSize.rows).fill(false));
+    setCheckboxVal(Array(matrixSize.rows).fill(false));
   }, [matrixSize]);
 
   const handleCheckbox = (index) => {
     const temp = [...checkboxVal];
     temp[index] = !temp[index];
-    setcheckboxVal(temp);
+    setCheckboxVal(temp);
   };
-
-  
 
   const renderLatexMatrix = (matrix) => {
     return (
       "\\begin{pmatrix}\n" +
       matrix
-        .map((row, index) => row.join(" & ") + (index == matrix.length - 1 ? "\n" : "\\\\\n"))
+        .map((row, index) => row.join(" & ")+(index === matrix.length - 1 ? "\n" : "\\\\\n"))
         .join("") +
       "\\end{pmatrix}"
     );
   };
 
-  const TEST = () => {
-    console.log(checkboxVal);
-  };
-
   return (
     <div>
-
       <div><Link to="/">back</Link></div>
-      <br/><br/><br/><br/><br/>
-
-
       <h1>Matrix Input</h1>
       <MatrixInputSize setMatrixSize={setMatrixSize} />
-      <MatrixInput matrixSize={matrixSize} setMatrix={setMatrix} />
+      <MatrixInput matrixSize={matrixSize} setMatrix={setMatrix} checkboxVal={checkboxVal} />
 
-      {Array.from({ length: matrixSize.rows }, (_, index) => (
+      {Array.from({length: matrixSize.rows}, (_, index) => (
         <div key={index}>
           <input
             type="checkbox"
             checked={checkboxVal[index]}
-            onChange={() => handleCheckbox(index)}
-          /> 
-          </div>
-        ))}
-        
-      <BlockMath math={"A = " + latexMatrix} />
-      <button onClick={TEST}>test</button> 
+            onChange={()=>handleCheckbox(index)}
+          />
+        </div>
+      ))}
 
+      <button onClick={()=>console.log(matrix[0][0]+matrix[1][1])  }>test</button>
+      
+      <BlockMath math={"A = "+renderLatexMatrix(matrix)} />
     </div>
   );
 };
+
+
 
 export default App;
