@@ -1,25 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Home  from './home'
 import App  from './App'
 import Bisection from './method/bisection';
-import Lagrange from './method/lagrange'
+import FalsePosition  from './method/falsePosition'
+import Lagrange from './method/lagrange';
+import './style.css';
 
 
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home/>,
+    element: <App/>,
   },
   {
     path: "/Bisection",
     element: <Bisection/>,
+  },
+  {
+    path: "/FalsePosition",
+    element: <FalsePosition/>,
   },
   {
     path: "/Lagrange",

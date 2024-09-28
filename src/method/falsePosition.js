@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState,} from 'react';
 import { Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import { evaluate } from 'mathjs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../style.css';
 
-const Bisection = () => {
+const falsePosition = () => {
     const [data, setData] = useState([]);
     const [Equation, setEquation] = useState("(x^4)-13");
     const [X, setX] = useState(0);
@@ -18,7 +18,7 @@ const Bisection = () => {
     };
 
     const Calbisection = function (xl, xr) {
-        let xm, ea;
+        let xm, fXm, fXr, ea;
         let iter = 0;
         const MAX = 50;
         const e = 0.00001;
@@ -112,18 +112,17 @@ const Bisection = () => {
                 </Button>
             </Form>
             <br/><br/>
-            <div className="chartbisec">
-                <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="iteration" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="Xm" stroke="#8884d8" />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
+
+            <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="iteration" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="Xm" stroke="#8884d8" />
+                </LineChart>
+            </ResponsiveContainer>
 
             <br/><br/><br/>
             
@@ -162,4 +161,7 @@ const Bisection = () => {
     );
 }
 
-export default Bisection;
+export default falsePosition;
+
+
+

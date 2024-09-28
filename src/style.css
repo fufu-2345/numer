@@ -6,4 +6,7 @@ body{
     .test{
         font-size: 40px;
     }
+    .center{
+        text-align: center;
+    }
 }

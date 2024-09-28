@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {BlockMath} from 'react-katex';
+import '../style.css';
 
 const MatrixInputSize=({setMatrixSize})=>{
   return (
@@ -49,7 +50,6 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal, find }) => {
   const callar=(find,matrix) => {
     let a=0, n=0;
     let arr=[];
-    //find=42000;
 
     for (let i=0;i<matrixSize.rows+1;i++) {
       if(checkboxVal[i]){
@@ -58,13 +58,12 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal, find }) => {
       }
     }
 
-    console.log(find);
     for(let i=0;i<n;i++) {
       let temp=1;
       for(let j=0;j<n;j++) {
         if(j!==i) {
           
-          temp*= (      matrix[arr[j]][0] - find )   /   ( matrix[arr[j]][0]- matrix[arr[i]][0]    ); ///err
+          temp*= (      matrix[arr[j]][0] - parseFloat(find) )   /   ( matrix[arr[j]][0]- matrix[arr[i]][0]    ); ///err
         }
         
       }
@@ -93,11 +92,12 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal, find }) => {
   );
 };
 
-const App = () => {
+const Lagrange = () => {
   const [matrixSize, setMatrixSize] = useState({ rows: 2, columns: 2 });
   const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
   const [checkboxVal, setCheckboxVal] = useState(Array(matrixSize.rows).fill(false));
-  const [find, setfind] = useState(parseFloat(42000));
+  const [find, setfind] = useState("");
+  const [result, setresult] = useState("");
 
   useEffect(() => {
     setCheckboxVal(Array(matrixSize.rows).fill(false));
@@ -145,13 +145,15 @@ const App = () => {
 
       <br/><br/>
 
+      <div >{result}</div>
+
+
       <button onClick={()=>console.log(matrix[0][0]+matrix[4][0])  }>test</button>
-      
+
       <BlockMath math={"A = "+renderLatexMatrix(matrix)} />
+
     </div>
   );
 };
 
-
-
-export default App;
+export default Lagrange;
