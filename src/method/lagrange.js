@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {BlockMath} from 'react-katex';
 
-let matrix = [];
-
 const MatrixInputSize=({setMatrixSize})=>{
   return (
     <input
@@ -45,10 +43,10 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal }) => {
     }
 
     setMatrix(matrix);
-    callar(42000);
+    callar(42000,matrix);
   };
 
-  const callar=(x) => {
+  const callar=(x,matrix) => {
     let a=0, n=0;
     let arr=[];
 
@@ -58,19 +56,30 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal }) => {
         n++;
       }
     }
+    /*
+    console.log("arr/n");
     console.log(arr);
+    console.log(n);
     
-    
+    console.log("check");
+    console.log(matrix[0][0]);
+    console.log(matrix[1][0]);
+    console.log(matrix[2][0]);
+    console.log(matrix[3][0]);
+    console.log(matrix[4][0]);*/
+
     for(let i=0;i<n;i++) {
       let temp=1;
       for(let j=0;j<n;j++) {
         if(j!==i) {
-          temp*= (      matrix[0][arr[j]] - x )   /   ( matrix[0][arr[j]] - matrix[0][arr[i]]     ); ///err
+          
+          temp*= (      matrix[arr[j]][0] - x )   /   ( matrix[arr[j]][0]- matrix[arr[i]][0]    ); ///err
         }
+        
       }
-      if (matrix[1] && matrix[1][arr[i]] !== undefined) {
-        a+=temp*matrix[1][arr[i]];
-      }
+
+      a+=temp*matrix[arr[i]][1];
+      console.log(a);
     }
     console.log(a);
   };
@@ -136,7 +145,7 @@ const App = () => {
         </div>
       ))}
 
-      <button onClick={()=>console.log(matrix[0][0]+matrix[1][1])  }>test</button>
+      <button onClick={()=>console.log(matrix[0][0]+matrix[4][0])  }>test</button>
       
       <BlockMath math={"A = "+renderLatexMatrix(matrix)} />
     </div>
