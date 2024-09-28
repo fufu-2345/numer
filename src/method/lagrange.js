@@ -26,7 +26,7 @@ const MatrixRow=({children})=>{
   return <div style={{ display: 'flex' }}>{children}</div>;
 };
 
-const MatrixInput = ({ matrixSize, setMatrix, checkboxVal }) => {
+const MatrixInput = ({ matrixSize, setMatrix, checkboxVal, find }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     let count = 0;
@@ -43,12 +43,13 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal }) => {
     }
 
     setMatrix(matrix);
-    callar(42000,matrix);
+    callar(find,matrix);
   };
 
-  const callar=(x,matrix) => {
+  const callar=(find,matrix) => {
     let a=0, n=0;
     let arr=[];
+    //find=42000;
 
     for (let i=0;i<matrixSize.rows+1;i++) {
       if(checkboxVal[i]){
@@ -56,30 +57,19 @@ const MatrixInput = ({ matrixSize, setMatrix, checkboxVal }) => {
         n++;
       }
     }
-    /*
-    console.log("arr/n");
-    console.log(arr);
-    console.log(n);
-    
-    console.log("check");
-    console.log(matrix[0][0]);
-    console.log(matrix[1][0]);
-    console.log(matrix[2][0]);
-    console.log(matrix[3][0]);
-    console.log(matrix[4][0]);*/
 
+    console.log(find);
     for(let i=0;i<n;i++) {
       let temp=1;
       for(let j=0;j<n;j++) {
         if(j!==i) {
           
-          temp*= (      matrix[arr[j]][0] - x )   /   ( matrix[arr[j]][0]- matrix[arr[i]][0]    ); ///err
+          temp*= (      matrix[arr[j]][0] - find )   /   ( matrix[arr[j]][0]- matrix[arr[i]][0]    ); ///err
         }
         
       }
 
       a+=temp*matrix[arr[i]][1];
-      console.log(a);
     }
     console.log(a);
   };
@@ -107,6 +97,7 @@ const App = () => {
   const [matrixSize, setMatrixSize] = useState({ rows: 2, columns: 2 });
   const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
   const [checkboxVal, setCheckboxVal] = useState(Array(matrixSize.rows).fill(false));
+  const [find, setfind] = useState(parseFloat(42000));
 
   useEffect(() => {
     setCheckboxVal(Array(matrixSize.rows).fill(false));
@@ -117,6 +108,11 @@ const App = () => {
     temp[index] = !temp[index];
     setCheckboxVal(temp);
   };
+
+  const handlesetfind = (event)=>{
+    setfind(event.target.value);
+  }
+
 
   const renderLatexMatrix = (matrix) => {
     return (
@@ -133,7 +129,7 @@ const App = () => {
       <div><Link to="/">back</Link></div>
       <h1>Matrix Input</h1>
       <MatrixInputSize setMatrixSize={setMatrixSize} />
-      <MatrixInput matrixSize={matrixSize} setMatrix={setMatrix} checkboxVal={checkboxVal} />
+      <MatrixInput matrixSize={matrixSize} setMatrix={setMatrix} checkboxVal={checkboxVal} find={find}/>
 
       {Array.from({length: matrixSize.rows}, (_, index) => (
         <div key={index}>
@@ -144,6 +140,10 @@ const App = () => {
           />
         </div>
       ))}
+
+      <input type="text" value={find} onChange={handlesetfind}/>
+
+      <br/><br/>
 
       <button onClick={()=>console.log(matrix[0][0]+matrix[4][0])  }>test</button>
       
