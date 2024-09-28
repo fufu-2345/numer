@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App  from './App'
-import Bisection from './method/bisection';
-import FalsePosition  from './method/falsePosition'
-import Lagrange from './method/lagrange';
 import './style.css';
+
+/////rootequation
+import Bisection from './method/rootEquation/bisection';
+import FalsePosition  from './method/rootEquation/falsePosition'
+import OnepointIteration  from './method/rootEquation/onepointIteration'
+
+
+
+
+/////Iterpolation
+import Lagrange from './method/interPolation/lagrange';
+import Spline from './method/interPolation/spline';
+
+
 
 
 import {
@@ -26,8 +37,16 @@ const router = createBrowserRouter([
     element: <FalsePosition/>,
   },
   {
+    path: "/OnepointIteration",
+    element: <OnepointIteration/>,
+  },
+  {
     path: "/Lagrange",
     element: <Lagrange/>,
+  },
+  {
+    path: "/Spline",
+    element: <Spline/>,
   },
 
 
