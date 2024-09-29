@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BlockMath } from 'react-katex';
 import '../../style.css';
+import CubicSpline from 'cubic-spline';
 
 const Spline = () => {
   const [matrixSize, setMatrixSize] = useState({ rows: 2, columns: 2 });
@@ -66,17 +67,35 @@ const Spline = () => {
   const callar=(matrix)=>{
     let a=0,n=0,m;
     let arr=[];
+    const xVal=[],yVal=[];
 
     for (let i = 0; i < matrixSize.rows + 1; i++) {
       if (checkboxVal[i]) {
         arr.push(i);
+        xVal.push(matrix[i][0]);
+        yVal.push(matrix[i][1]);
         n++;
       }
     }
     
-    m=slope( matrix[arr[1]][1]  , matrix[arr[0]][1]  , matrix[arr[1]][0]  , matrix[arr[0]][0] );
-    console.log(matrix[arr[0]][1]);
-    a= matrix[arr[0]][1] +    (m*(find-matrix[arr[0]][0]));
+    console.log("xVal yVal");
+    console.log(xVal);
+    console.log(yVal);
+
+    if(n==2){
+        m=slope( matrix[arr[1]][1]  , matrix[arr[0]][1]  , matrix[arr[1]][0]  , matrix[arr[0]][0] );
+        console.log(matrix[arr[0]][1]);
+        a= matrix[arr[0]][1] +    (m*(find-matrix[arr[0]][0]));
+
+    }
+    else{
+        console.log("good");
+        const spline = new CubicSpline(xVal, yVal);
+        a = spline.at(find);
+    }
+
+    
+
     console.log(a);
     setResult(a.toFixed(precis));
   };

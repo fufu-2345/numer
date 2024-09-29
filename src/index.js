@@ -13,7 +13,7 @@ import OnepointIteration  from './method/rootEquation/onepointIteration'
 
 /////Iterpolation
 import Lagrange from './method/interPolation/lagrange';
-import Spline from './method/interPolation/spline';
+import Spline from './method/interPolation/testSpline';
 
 
 

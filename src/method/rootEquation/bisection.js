@@ -18,7 +18,7 @@ const Bisection = () => {
         return Math.abs(    (xnew - xold)    /xnew)       *100;
     };
 
-    const Calbisection = function (xl, xr) {
+    const Calbisection = function (xl, xr){
         let xm, ea;
         let iter = 0;
         const MAX = 50;
@@ -32,35 +32,36 @@ const Bisection = () => {
             const fXm = evaluate(Equation,{x: xm});
 
             iter++;
-            if (fXm * fXr > 0) {
-                ea = error(xr, xm);
+            if(fXm*fXr > 0){
+                ea=error(xr,xm);
                 newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr});
-                xr = xm;
-            } else if (fXm * fXr < 0) {
-                ea = error(xl, xm);
+                xr=xm;
+            } 
+            else if(fXm*fXr<0){
+                ea=error(xl, xm);
                 newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr});
                 xl = xm;
             }
-        } while (ea > e && iter < MAX);
+        }while(  ea>e   &&   iter<MAX);
         
         setData(newData);
         setX(xm);
     };
 
-    const inputEquation = function(event){
+    const inputEquation=function(event){
         setEquation(event.target.value);
     };
     
-    const inputXL = function(event){
+    const inputXL=function(event){
         setXL(event.target.value);
     };
     
-    const inputXR = function(event){
+    const inputXR=function(event){
         setXR(event.target.value);
     };
 
-    const handlePrecis = function(event){
-        if(event.target.value>-1 && event.target.value<100){
+    const handlePrecis=function(event){
+        if(  event.target.value>-1    &&     event.target.value<100   ){
             setPrecis(event.target.value);
         }
     };
@@ -88,7 +89,7 @@ const Bisection = () => {
                     <Form.Label>Input f(x)</Form.Label>
                     <input
                         type="text"
-                        id="equation"
+                        //id="equation"
                         value={Equation}
                         onChange={inputEquation}
                         style={{ width: "20%", margin: "0 auto" }}
@@ -97,7 +98,7 @@ const Bisection = () => {
                     <Form.Label>Input XL</Form.Label>
                     <input
                         type="number"
-                        id="XL"
+                        //id="XL"
                         value={XL}
                         onChange={inputXL}
                         style={{ width: "20%", margin: "0 auto" }}
@@ -106,7 +107,7 @@ const Bisection = () => {
                     <Form.Label>Input XR</Form.Label>
                     <input
                         type="number"
-                        id="XR"
+                       //id="XR"
                         value={XR}
                         onChange={inputXR}
                         style={{ width: "20%", margin: "0 auto" }}

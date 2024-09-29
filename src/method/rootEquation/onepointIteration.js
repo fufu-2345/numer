@@ -133,6 +133,7 @@ const OnepointIteration = () => {
                 <Table striped bordered hover variant="dark">
                     <thead>
                         <tr>
+                        
                             <th width="10%">Iteration</th>
                             <th width="30%">X result</th>
 
