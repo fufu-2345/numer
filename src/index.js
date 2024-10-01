@@ -8,6 +8,7 @@ import Bisection from './method/rootEquation/bisection';
 import FalsePosition  from './method/rootEquation/falsePosition';
 import OnepointIteration  from './method/rootEquation/onepointIteration';
 import NewtonRapson from './method/rootEquation/newtonRapson';
+import Secant from './method/rootEquation/secant';
 
 
 
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
     element: <NewtonRapson/>,
   },
   {
+    path: "/Secant",
+    element: <Secant/>,
+  },
+  {
     path: "/Lagrange",
     element: <Lagrange/>,
   },
@@ -57,6 +62,9 @@ const router = createBrowserRouter([
 
 
 ]);
+
+
+////// https://reactrouter.com/en/main/routers/router-provider <-- router
 
 function Frame() {
   return (

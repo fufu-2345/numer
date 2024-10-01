@@ -5,7 +5,6 @@ import { evaluate, derivative } from 'mathjs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../../style.css';
 
-/////////   https://mathjs.org/docs/reference/functions/derivative.html
 
 const NewtonRapson = () => {
     const [data, setData] = useState([{ iteration: 0, Xm: 0 ,Error: 0 }]);
@@ -33,6 +32,8 @@ const NewtonRapson = () => {
         const MAX = 50;
 
         const newData=[];
+
+        /////////   https://mathjs.org/docs/reference/functions/derivative.html <--how to derivative
 
         xnew= xin-     (evaluate(Equation,{x: xin}))  /     (derivative(Equation, 'x').evaluate({ x: xin })) ;
         iter++;
@@ -81,6 +82,8 @@ const NewtonRapson = () => {
     const calculateRoot = function(){
         Cal(parseFloat(Xin));
     };
+    
+    //////////////////  https://recharts.org/en-US/
 
     const TooltipDisplay = ({ active, payload, label }) => {
         if (active && payload && payload.length) {

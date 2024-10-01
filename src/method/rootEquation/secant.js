@@ -5,12 +5,12 @@ import { evaluate } from 'mathjs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../../style.css';
 
-const Bisection = () => {
-    const [data, setData] = useState([{ iteration: 0, Xl: 0, Xm: 0, Xr: 0,Error: 0 }]);
-    const [Equation, setEquation] = useState("(x^4)-13");
+const Secant = () => {
+    const [data, setData] = useState([{ iteration: 0, X0: 0, Xm: 0, X1: 0,Error: 0 }]);
+    const [Equation, setEquation] = useState("(x^2)-7");
     const [X, setX] = useState(0);
-    const [XL, setXL] = useState("");
-    const [XR, setXR] = useState("");
+    const [X0, setX0] = useState("");
+    const [X1, setX1] = useState("");
     const [precis, setPrecis] = useState(7);
     const [e ,setError] = useState(0.000001);
     const [checkboxVal, setCheckboxVal] = useState(Array(2).fill(true));
@@ -29,46 +29,54 @@ const Bisection = () => {
         return Math.abs(    (xnew - xold)    /xnew)       *100;
     };
 
-    const Calbisection = function (xl, xr){
-        let xm, ea;
+    const Cal = function (X0, X1){
+        let x2,x0,x1,ea;
         let iter = 0;
         const MAX = 50;
 
         const newData=[];
 
-        do {
-            xm = (xl + xr) / 2.0;
+        x0=X0;
+        x1=X1;
 
-            const fXr = evaluate(Equation,{x: xr});
-            const fXm = evaluate(Equation,{x: xm});
+        let fx1 = evaluate(Equation,{x: x1});
+        let fx0 = evaluate(Equation,{x: x0});
 
+        x2=x1- (fx1*(x0-x1))/(fx0-fx1);
+            
+        ea = error(x1, x2);
+        newData.push({iteration: iter,X0: x0,Xm: x2,X1: x1,Error: ea});
+        iter++;
+                
+        while(  ea>e   &&   iter<MAX){
+            
+            x0=x1;
+            x1=x2;
+
+            fx1 = evaluate(Equation,{x: x1});
+            fx0 = evaluate(Equation,{x: x0});
+
+            x2=x1- (fx1*(x0-x1))/(fx0-fx1);
+            
+            ea = error(x1, x2);
+            newData.push({iteration: iter,X0: x0,Xm: x2,X1: x1,Error: ea});
             iter++;
-            if(fXm*fXr > 0){
-                ea=error(xr,xm);
-                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr,Error: ea});
-                xr=xm;
-            } 
-            else if(fXm*fXr<0){
-                ea=error(xl, xm);
-                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr,Error: ea});
-                xl = xm;
-            }
-        }while(  ea>e   &&   iter<MAX);
+        }
         
         setData(newData);
-        setX(xm);
+        setX(x2);
     };
 
     const inputEquation=function(event){
         setEquation(event.target.value);
     };
     
-    const inputXL=function(event){
-        setXL(event.target.value);
+    const inputX0=function(event){
+        setX0(event.target.value);
     };
     
-    const inputXR=function(event){
-        setXR(event.target.value);
+    const inputX1=function(event){
+        setX1(event.target.value);
     };
 
     const handlePrecis=function(event){
@@ -86,7 +94,7 @@ const Bisection = () => {
 
 
     const calculateRoot = function(){
-        Calbisection(parseFloat(XL), parseFloat(XR));
+        Cal(parseFloat(X0), parseFloat(X1));
     };
 
 
@@ -121,19 +129,19 @@ const Bisection = () => {
                         style={{ width: "20%", margin: "0 auto" }}
                         className="form-control"
                     />
-                    <Form.Label>Input XL</Form.Label>
+                    <Form.Label>Input X0</Form.Label>
                     <input
                         type="number"
-                        value={XL}
-                        onChange={inputXL}
+                        value={X0}
+                        onChange={inputX0}
                         style={{ width: "20%", margin: "0 auto" }}
                         className="form-control"
                     />
-                    <Form.Label>Input XR</Form.Label>
+                    <Form.Label>Input X1</Form.Label>
                     <input
                         type="number"
-                        value={XR}
-                        onChange={inputXR}
+                        value={X1}
+                        onChange={inputX1}
                         style={{ width: "20%", margin: "0 auto" }}
                     />
                 </Form.Group>
@@ -192,9 +200,9 @@ const Bisection = () => {
                     <thead>
                         <tr>
                             <th width="10%">Iteration</th>
-                            <th width="25%">XL</th>
-                            <th width="25%">XM</th>
-                            <th width="25%">XR</th>
+                            <th width="25%">X0</th>
+                            <th width="25%">Xm</th>
+                            <th width="25%">X1</th>
                             <th width="25%">Error</th>
                         </tr>
                     </thead>
@@ -202,9 +210,9 @@ const Bisection = () => {
                         {data.map((element, index) => (
                             <tr key={index}>
                                 <td className="center">{element.iteration}</td>
-                                <td className="center">{element.Xl.toFixed(precis)}</td>
+                                <td className="center">{element.X0.toFixed(precis)}</td>
                                 <td className="center">{element.Xm.toFixed(precis)}</td>
-                                <td className="center">{element.Xr.toFixed(precis)}</td>
+                                <td className="center">{element.X1.toFixed(precis)}</td>
                                 <td className="center">{element.Error.toFixed(precis)}</td>
                             </tr>
                         ))}
@@ -216,4 +224,4 @@ const Bisection = () => {
     
 }
 
-export default Bisection;
+export default Secant;

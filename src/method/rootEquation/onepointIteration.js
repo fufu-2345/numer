@@ -78,6 +78,8 @@ const OnepointIteration = () => {
     const calculateRoot = function(){
         Cal(parseFloat(Xin));
     };
+    
+    //////////////////  https://recharts.org/en-US/
 
     const TooltipDisplay = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
@@ -145,7 +147,7 @@ const OnepointIteration = () => {
                         <Legend />
                         
 
-                        {checkboxVal[0] && <Line type="monotone" dataKey="Xm" stroke="#8884d8" />}
+                        {checkboxVal[0] && <Line type="monotone" dataKey="Xm" stroke="#0018f9" />}
                         {checkboxVal[1] && <Line type="monotone" dataKey="Error" stroke="#ff2800" />}
 
                     </LineChart>

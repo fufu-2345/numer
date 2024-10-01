@@ -14,6 +14,8 @@ const App = () => {
             <br/>
             <div><Link to="/NewtonRapson">NewtonRapson</Link></div>
             <br/>
+            <div><Link to="/Secant">Secant</Link></div>
+            <br/>
             <div><Link to="/Lagrange">Lagrange</Link></div>
             <br/>
             <div><Link to="/Spline">Spline</Link></div>
