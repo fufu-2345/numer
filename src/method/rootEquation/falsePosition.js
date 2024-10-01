@@ -6,18 +6,25 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import '../../style.css';
 
 const FalsePosition = () => {
-    const [data, setData] = useState([{ iteration: 0, Xl: 0, Xm: 0, Xr: 0 }]);
+    const [data, setData] = useState([{ iteration: 0, Xl: 0, Xm: 0, Xr: 0 ,Error: 0}]);
     const [Equation, setEquation] = useState("(x^4)-13");
     const [X, setX] = useState(0);
     const [XL, setXL] = useState("");
     const [XR, setXR] = useState("");
     const [precis, setPrecis] = useState(7);
     const [e ,setError] = useState(0.000001);
-    
+    const [checkboxVal, setCheckboxVal] = useState(Array(2).fill(true));
+    let checktext = ["Xm", "Error"];
 
     const error = function (xold, xnew){
         return Math.abs(    (xnew - xold)    /xnew)       *100;
     };
+
+    const handleCheckbox = (index) => {
+        const temp = [...checkboxVal];
+        temp[index] = !temp[index];
+        setCheckboxVal(temp);
+      };
 
     const Cal = function (xl, xr) {
         let xm, ea;
@@ -38,11 +45,11 @@ const FalsePosition = () => {
             iter++;
             if (fXm*fXr > 0) {
                 ea = error(xr, xm);
-                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr});
+                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr,Error: ea});
                 xr = xm;
             } else if (fXm*fXr < 0) {
                 ea = error(xl, xm);
-                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr});
+                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr,Error: ea});
                 xl = xm;
             }
         } while (ea>e && iter<MAX);
@@ -80,6 +87,20 @@ const FalsePosition = () => {
     const calculateRoot = function(){
         Cal(parseFloat(XL), parseFloat(XR));
     };
+
+    const TooltipDisplay = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+          return (
+            <div className="tooltipDis">
+                <p className="label">{`Iteration: ${label}`}</p>
+                <p className="intro">{`Value: ${payload[0]?.value || "N/A"}`}</p>
+                <p className="intro">{`Error: ${payload[1]?.value || "N/A"}%`}</p>
+            </div>
+          );
+        }
+        return null;
+      };
+
 
 
     return (
@@ -133,16 +154,35 @@ const FalsePosition = () => {
             </Form>
             <br/><br/>
             
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="iteration" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="Xm" stroke="#8884d8" />
-                </LineChart>
-            </ResponsiveContainer>
+            <div className="rootGraph">
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={data}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="iteration" />
+                        <YAxis />
+                        <Tooltip content={<TooltipDisplay />} />
+                        <Legend />
+                        
+
+                        {checkboxVal[0] && <Line type="monotone" dataKey="Xm" stroke="#0018f9" />}
+                        {checkboxVal[1] && <Line type="monotone" dataKey="Error" stroke="#ff2800" />}
+
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+
+            {Array.from({ length: 2 }, (_, index) => (
+                <Form.Group style={{ display: "flex"}}>
+                    <div key={index}>
+                        <input
+                            type="checkbox"
+                            checked={checkboxVal[index]}
+                            onChange={() => handleCheckbox(index)}
+                        />
+                    </div>
+                    <Form.Label>{checktext[index]}</Form.Label>
+                </Form.Group>
+            ))}
 
             <br/><br/><br/>
             
@@ -153,9 +193,10 @@ const FalsePosition = () => {
                     <thead>
                         <tr>
                             <th width="10%">Iteration</th>
-                            <th width="30%">XL</th>
-                            <th width="30%">XM</th>
-                            <th width="30%">XR</th>
+                            <th width="25%">XL</th>
+                            <th width="25%">XM</th>
+                            <th width="25%">XR</th>
+                            <th width="25%">Error</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,6 +207,7 @@ const FalsePosition = () => {
                                     <td className="center">{element.Xl.toFixed(precis)}</td>
                                     <td className="center">{element.Xm.toFixed(precis)}</td>
                                     <td className="center">{element.Xr.toFixed(precis)}</td>
+                                    <td className="center">{element.Error.toFixed(precis)}</td>
                                 </tr>
                             );
                         })}

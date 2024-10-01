@@ -12,6 +12,8 @@ const App = () => {
             <br/>
             <div><Link to="/OnepointIteration">OnepointIteration</Link></div>
             <br/>
+            <div><Link to="/NewtonRapson">NewtonRapson</Link></div>
+            <br/>
             <div><Link to="/Lagrange">Lagrange</Link></div>
             <br/>
             <div><Link to="/Spline">Spline</Link></div>

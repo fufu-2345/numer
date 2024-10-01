@@ -1,78 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import { Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
-import { evaluate } from 'mathjs';
+import { evaluate, derivative } from 'mathjs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../../style.css';
 
-const Bisection = () => {
-    const [data, setData] = useState([{ iteration: 0, Xl: 0, Xm: 0, Xr: 0,Error: 0 }]);
-    const [Equation, setEquation] = useState("(x^4)-13");
+/////////   https://mathjs.org/docs/reference/functions/derivative.html
+
+const NewtonRapson = () => {
+    const [data, setData] = useState([{ iteration: 0, Xm: 0 ,Error: 0 }]);
+    const [Equation, setEquation] = useState("(x^2)-7");
     const [X, setX] = useState(0);
-    const [XL, setXL] = useState("");
-    const [XR, setXR] = useState("");
+    const [Xin, setXin] = useState("");
     const [precis, setPrecis] = useState(7);
     const [e ,setError] = useState(0.000001);
     const [checkboxVal, setCheckboxVal] = useState(Array(2).fill(true));
     let checktext = ["Xm", "Error"];
 
-
-      const handleCheckbox = (index) => {
+    const handleCheckbox = (index) => {
         const temp = [...checkboxVal];
         temp[index] = !temp[index];
         setCheckboxVal(temp);
       };
 
-  
-
     const error = function (xold, xnew){
         return Math.abs(    (xnew - xold)    /xnew)       *100;
     };
 
-    const Calbisection = function (xl, xr){
-        let xm, ea;
+    const Cal = function(xin){
+        let xnew,xold,ea;
         let iter = 0;
         const MAX = 50;
 
         const newData=[];
 
-        do {
-            xm = (xl + xr) / 2.0;
+        xnew= xin-     (evaluate(Equation,{x: xin}))  /     (derivative(Equation, 'x').evaluate({ x: xin })) ;
+        iter++;
+        ea = error(xin, xnew);
+        newData.push({iteration: iter,Xm: xnew,Error: ea});
 
-            const fXr = evaluate(Equation,{x: xr});
-            const fXm = evaluate(Equation,{x: xm});
-
+        while(ea>e && iter<MAX){
+            
+            xold=xnew;
+            xnew= xnew-     (evaluate(Equation,{x: xnew}))  /   (derivative(Equation, 'x').evaluate({ x: xnew })) ;
+            
             iter++;
-            if(fXm*fXr > 0){
-                ea=error(xr,xm);
-                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr,Error: ea});
-                xr=xm;
-            } 
-            else if(fXm*fXr<0){
-                ea=error(xl, xm);
-                newData.push({iteration: iter,Xl: xl,Xm: xm,Xr: xr,Error: ea});
-                xl = xm;
-            }
-        }while(  ea>e   &&   iter<MAX);
+
+            ea = error(xold, xnew);
+            newData.push({iteration: iter,Xm: xnew,Error: ea});
+        }
+
+        console.log(newData);
         
         setData(newData);
-        setX(xm);
+        setX(xnew);
     };
 
-    const inputEquation=function(event){
+    const inputEquation = function(event){
         setEquation(event.target.value);
     };
     
-    const inputXL=function(event){
-        setXL(event.target.value);
-    };
-    
-    const inputXR=function(event){
-        setXR(event.target.value);
+    const inputXin = function(event){
+        setXin(event.target.value);
     };
 
-    const handlePrecis=function(event){
-        if(  event.target.value>-1    &&     event.target.value<100   ){
+    const handlePrecis = function(event){
+        if(event.target.value>-1 && event.target.value<100){
             setPrecis(event.target.value);
         }
     };
@@ -86,9 +79,8 @@ const Bisection = () => {
 
 
     const calculateRoot = function(){
-        Calbisection(parseFloat(XL), parseFloat(XR));
+        Cal(parseFloat(Xin));
     };
-
 
     const TooltipDisplay = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
@@ -108,50 +100,44 @@ const Bisection = () => {
         <Container>
             <div><Link to="/">back</Link></div>
             <br/><br/><br/><br/><br/>
-    
+
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Input f(x)</Form.Label>
                     <input
                         type="text"
+                        id="equation"
                         value={Equation}
                         onChange={inputEquation}
                         style={{ width: "20%", margin: "0 auto" }}
                         className="form-control"
                     />
-                    <Form.Label>Input XL</Form.Label>
+                    <Form.Label>Input Xin</Form.Label>
                     <input
                         type="number"
-                        value={XL}
-                        onChange={inputXL}
-                        style={{ width: "20%", margin: "0 auto" }}
-                        className="form-control"
-                    />
-                    <Form.Label>Input XR</Form.Label>
-                    <input
-                        type="number"
-                        value={XR}
-                        onChange={inputXR}
+                        id="Xin"
+                        value={Xin}
+                        onChange={inputXin}
                         style={{ width: "20%", margin: "0 auto" }}
                     />
                 </Form.Group>
-    
+
                 <Form.Group>
 
                     <Form.Label>Input Precision</Form.Label>
                     <input type="number" value={precis} onChange={handlePrecis} style={{ width: "20%", margin: "0 auto" }}/>
-                    
+
                     <Form.Label>Input Error</Form.Label>
                     <input type="number" value={e} onChange={handleError} style={{ width: "20%", margin: "0 auto" }}/>
                 
                 </Form.Group>
-    
+
                 <Button variant="dark" onClick={calculateRoot}>
                     Calculate
                 </Button>
             </Form>
             <br/><br/>
-    
+            
             <div className="rootGraph">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={data}>
@@ -168,7 +154,7 @@ const Bisection = () => {
                     </LineChart>
                 </ResponsiveContainer>
             </div>
-    
+
             {Array.from({ length: 2 }, (_, index) => (
                 <Form.Group style={{ display: "flex"}}>
                     <div key={index}>
@@ -181,37 +167,38 @@ const Bisection = () => {
                     <Form.Label>{checktext[index]}</Form.Label>
                 </Form.Group>
             ))}
-    
+
             <br/><br/><br/>
-    
+            
+            <br />
             <h5>Answer = {X.toFixed(precis)}</h5>
             <Container>
                 <Table striped bordered hover variant="dark">
                     <thead>
                         <tr>
+                        
                             <th width="10%">Iteration</th>
-                            <th width="25%">XL</th>
-                            <th width="25%">XM</th>
-                            <th width="25%">XR</th>
+                            <th width="25%">X result</th>
                             <th width="25%">Error</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((element, index) => (
-                            <tr key={index}>
-                                <td className="center">{element.iteration}</td>
-                                <td className="center">{element.Xl.toFixed(precis)}</td>
-                                <td className="center">{element.Xm.toFixed(precis)}</td>
-                                <td className="center">{element.Xr.toFixed(precis)}</td>
-                                <td className="center">{element.Error.toFixed(precis)}</td>
-                            </tr>
-                        ))}
+                        {data.map(function (element, index) {
+                            return (
+                                <tr key={index}>
+                                    <td className="center">{element.iteration}</td>
+                                    <td className="center">{element.Xm.toFixed(precis)}</td>  
+                                    <td className="center">{element.Error.toFixed(precis)}</td>  
+
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </Table>
             </Container>
         </Container>
     );
-    
 }
 
-export default Bisection;
+export default NewtonRapson;

@@ -6,12 +6,20 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import '../../style.css';
 
 const OnepointIteration = () => {
-    const [data, setData] = useState([{ iteration: 0, xnew: 0 }]);
+    const [data, setData] = useState([{ iteration: 0, Xm: 0 ,Error: 0 }]);
     const [Equation, setEquation] = useState("((x^2)+7)/(x*2)");
     const [X, setX] = useState(0);
     const [Xin, setXin] = useState("");
     const [precis, setPrecis] = useState(7);
     const [e ,setError] = useState(0.000001);
+    const [checkboxVal, setCheckboxVal] = useState(Array(2).fill(true));
+    let checktext = ["Xm", "Error"];
+
+    const handleCheckbox = (index) => {
+        const temp = [...checkboxVal];
+        temp[index] = !temp[index];
+        setCheckboxVal(temp);
+      };
 
     const error = function (xold, xnew){
         return Math.abs(    (xnew - xold)    /xnew)       *100;
@@ -26,8 +34,8 @@ const OnepointIteration = () => {
 
         xnew= evaluate(Equation,{x: xin});
         iter++;
-        newData.push({iteration: iter,xnew: xnew});
         ea = error(xin, xnew);
+        newData.push({iteration: iter,Xm: xnew,Error: ea});
 
         while(ea>e && iter<MAX){
             
@@ -36,7 +44,7 @@ const OnepointIteration = () => {
             iter++;
 
             ea = error(xold, xnew);
-            newData.push({iteration: iter,xnew: xnew});
+            newData.push({iteration: iter,Xm: xnew,Error: ea});
         }
 
         console.log(newData);
@@ -70,6 +78,19 @@ const OnepointIteration = () => {
     const calculateRoot = function(){
         Cal(parseFloat(Xin));
     };
+
+    const TooltipDisplay = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+          return (
+            <div className="tooltipDis">
+                <p className="label">{`Iteration: ${label}`}</p>
+                <p className="intro">{`Value: ${payload[0]?.value || "N/A"}`}</p>
+                <p className="intro">{`Error: ${payload[1]?.value || "N/A"}%`}</p>
+            </div>
+          );
+        }
+        return null;
+      };
 
 
     return (
@@ -114,16 +135,35 @@ const OnepointIteration = () => {
             </Form>
             <br/><br/>
             
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="iteration" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="xnew" stroke="#8884d8" />
-                </LineChart>
-            </ResponsiveContainer>
+            <div className="rootGraph">
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={data}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="iteration" />
+                        <YAxis />
+                        <Tooltip content={<TooltipDisplay />} />
+                        <Legend />
+                        
+
+                        {checkboxVal[0] && <Line type="monotone" dataKey="Xm" stroke="#8884d8" />}
+                        {checkboxVal[1] && <Line type="monotone" dataKey="Error" stroke="#ff2800" />}
+
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+
+            {Array.from({ length: 2 }, (_, index) => (
+                <Form.Group style={{ display: "flex"}}>
+                    <div key={index}>
+                        <input
+                            type="checkbox"
+                            checked={checkboxVal[index]}
+                            onChange={() => handleCheckbox(index)}
+                        />
+                    </div>
+                    <Form.Label>{checktext[index]}</Form.Label>
+                </Form.Group>
+            ))}
 
             <br/><br/><br/>
             
@@ -135,7 +175,8 @@ const OnepointIteration = () => {
                         <tr>
                         
                             <th width="10%">Iteration</th>
-                            <th width="30%">X result</th>
+                            <th width="25%">X result</th>
+                            <th width="25%">Error</th>
 
                         </tr>
                     </thead>
@@ -144,7 +185,8 @@ const OnepointIteration = () => {
                             return (
                                 <tr key={index}>
                                     <td className="center">{element.iteration}</td>
-                                    <td className="center">{element.xnew.toFixed(precis)}</td>  
+                                    <td className="center">{element.Xm.toFixed(precis)}</td>  
+                                    <td className="center">{element.Error.toFixed(precis)}</td>  
 
                                 </tr>
                             );

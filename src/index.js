@@ -5,8 +5,9 @@ import './style.css';
 
 /////rootequation
 import Bisection from './method/rootEquation/bisection';
-import FalsePosition  from './method/rootEquation/falsePosition'
-import OnepointIteration  from './method/rootEquation/onepointIteration'
+import FalsePosition  from './method/rootEquation/falsePosition';
+import OnepointIteration  from './method/rootEquation/onepointIteration';
+import NewtonRapson from './method/rootEquation/newtonRapson';
 
 
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/OnepointIteration",
     element: <OnepointIteration/>,
+  },
+  {
+    path: "/NewtonRapson",
+    element: <NewtonRapson/>,
   },
   {
     path: "/Lagrange",
