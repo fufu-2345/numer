@@ -10,4 +10,17 @@ body{
     .center{
         text-align: center;
     }
+
+    .tooltipDis{
+        background-color:white;
+        padding: 0px 15px 0px 15px;
+        border: 1px solid;
+        border-color: black;
+        border-radius: 5px;
+    }
+
+    .rootGraph{
+        width: 100%;
+        height: 300px
+    }
 }
