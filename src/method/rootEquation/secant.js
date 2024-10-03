@@ -80,9 +80,16 @@ const Secant = () => {
     };
 
     const handlePrecis=function(event){
-        if(  event.target.value>-1    &&     event.target.value<100   ){
-            setPrecis(event.target.value);
+        if(event.target.value<0){
+            setPrecis(0);
         }
+        else if(event.target.value>99){
+            setPrecis(99);
+        }
+        else{
+            setPrecis(event.target.value);
+        }  
+        
     };
 
     

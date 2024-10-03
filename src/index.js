@@ -11,11 +11,13 @@ import NewtonRapson from './method/rootEquation/newtonRapson';
 import Secant from './method/rootEquation/secant';
 
 
+/////linearAlgebra
+import CramerRule from './method/linearAlgebra/cramerRule';
 
 
 /////Iterpolation
 import Lagrange from './method/interPolation/lagrange';
-import Spline from './method/interPolation/testSpline';
+import Spline from './method/interPolation/spline';
 
 
 
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/Secant",
     element: <Secant/>,
+  },
+  {
+    path: "/CramerRule",
+    element: <CramerRule/>,
   },
   {
     path: "/Lagrange",

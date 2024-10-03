@@ -15,40 +15,53 @@ const Lagrange = () => {
     setCheckboxVal(Array(matrixSize.rows).fill(false));
   }, [matrixSize]);
 
-  const handleMatrixSizeChange = (e) => {
-    const min=2, max=8;
-    const value =Math.max(min, Math.min(max, e.target.value));
-    e.target.value =value;
-    const rows = parseInt(value);
+  const handleMatrixSizeChange=(e)=>{
+    let val=2;
+    if(e.target.value<2){
+      val=2;
+    }
+    else if(e.target.value>8){
+      val=8;
+    }
+    else{
+      val=e.target.value;
+    } 
+
+    e.target.value =val;
+    const rows = parseInt(val);
     setMatrixSize((prevSize) => ({ ...prevSize, rows: rows }));
   };
 
-  const handleCheckbox = (index) => {
-    const temp = [...checkboxVal];
-    temp[index] = !temp[index];
+  const handleCheckbox=(index)=>{
+    const temp=[...checkboxVal];
+    temp[index]=!temp[index];
     setCheckboxVal(temp);
   };
 
-  const handleSetFind = (e) => {
+  const handleSetFind=(e)=>{
     setFind(e.target.value);
   };
 
-  const handleSetPrecis = (e) => {
-    if(e.target.value>-1 && e.target.value<100){
-      setPrecis(e.target.value);
+  const handleSetPrecis=function(event){
+    if(event.target.value<0){
+        setPrecis(0);
     }
+    else if(event.target.value>99){
+        setPrecis(99);
+    }
+    else{
+        setPrecis(event.target.value);
+    }  
     
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit=(event)=>{
     event.preventDefault();
     let count = 0;
-    const matrix = Array.from({ length: matrixSize.rows }, () =>
-      Array(matrixSize.columns).fill(0)
-    );
+    const matrix = Array.from({length: matrixSize.rows},()=>Array(matrixSize.columns).fill(0));
 
-    for (let i = 0; i < matrixSize.rows; i++) {
-      for (let j = 0; j < matrixSize.columns; j++) {
+    for (let i=0;i<matrixSize.rows;i++){
+      for (let j=0;j<matrixSize.columns;j++){
         matrix[i][j] =
           !isNaN(parseFloat(event.target[count].value)) ? parseFloat(event.target[count].value) : 0;
         count += 1;
@@ -63,16 +76,16 @@ const Lagrange = () => {
     let a=0,n=0;
     let arr=[];
 
-    for (let i = 0; i < matrixSize.rows + 1; i++) {
-      if (checkboxVal[i]) {
+    for (let i=0;i<matrixSize.rows+1;i++){
+      if(checkboxVal[i]){
         arr.push(i);
         n++;
       }
     }
 
-    for (let i=0;i<n;i++) {
+    for(let i=0;i<n;i++){
       let temp=1;
-      for (let j=0;j<n;j++) {
+      for(let j=0;j<n;j++){
         if(j !==i){
           temp *=(    matrix[arr[j]][0] - parseFloat(find)  )       /      (matrix[arr[j]][0]     -    matrix[arr[i]][0]    );
         }
@@ -83,7 +96,7 @@ const Lagrange = () => {
     setResult(a.toFixed(precis));
   };
 
-  const renderLatexMatrix =(matrix) => {
+  const renderLatexMatrix=(matrix)=>{
     return (
       "\\begin{pmatrix}\n" +
       matrix
@@ -105,9 +118,9 @@ const Lagrange = () => {
       />
 
       <form onSubmit={handleSubmit}>
-        {Array.from({ length: matrixSize.rows }, (_, indexRow) => (
+        {Array.from({ length: matrixSize.rows }, (_, indexRow)=>(
           <div style={{ display: 'flex' }} key={indexRow}>
-            {Array.from({ length: matrixSize.columns }, (_, indexColumn) => (
+            {Array.from({ length: matrixSize.columns }, (_, indexColumn)=>(
               <input
                 key={`${indexRow}-${indexColumn}`}
                 type="text"

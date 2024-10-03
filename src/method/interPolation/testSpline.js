@@ -34,12 +34,18 @@ const Spline = () => {
     setFind(e.target.value);
   };
 
-  const handleSetPrecis = (e) => {
-    if(e.target.value>-1 && e.target.value<100){
-      setPrecis(e.target.value);
+  const handleSetPrecis=function(event){
+    if(event.target.value<0){
+        setPrecis(0);
     }
+    else if(event.target.value>99){
+        setPrecis(99);
+    }
+    else{
+        setPrecis(event.target.value);
+  }  
     
-  };
+};
 
   const handleSubmit = (event) => {
     event.preventDefault();
