@@ -187,19 +187,22 @@ const Spline = () => {
             ))}
           </div>
         ))}
+
+        {Array.from({ length: matrixSize.rows }, (_, index) => (
+          <div key={index}>
+            <input
+              type="checkbox"
+              checked={checkboxVal[index]}
+              onChange={() => handleCheckbox(index)}
+            />
+          </div>
+        ))}
+
         <input type="number" value={precis} onChange={handleSetPrecis}/><br/>
         <button type="submit">Calculated</button>
       </form>
 
-      {Array.from({ length: matrixSize.rows }, (_, index) => (
-        <div key={index}>
-          <input
-            type="checkbox"
-            checked={checkboxVal[index]}
-            onChange={() => handleCheckbox(index)}
-          />
-        </div>
-      ))}
+      
 
       <input type="text" value={find} onChange={handleSetFind} />
       <br /><br />
