@@ -7,7 +7,6 @@ import { det } from 'mathjs';
 const CramerRule = () => {
     const [matrixSize, setMatrixSize] = useState(2);
     const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
-    const [B, setB] = useState([[0]]);
     const [result, setResult] = useState("");
     const [precis, setPrecis] = useState(7);
 
@@ -58,20 +57,26 @@ const CramerRule = () => {
             count+=1;
         }
 
+        //setB(B);
         setMatrix(matrix);
-        setB(B);
         callar(matrix,B);
     };
 
     const callar=(matrix,B)=>{
         let a = 0;
-        
-        console.log("B: "+B[0]); 
-        console.log(matrix);
-
-
+        let temp;
         a=det(matrix);
-        a+=parseInt(B[0]);
+
+        for(let i=0;i<matrixSize;i++){
+            temp = matrix.map(row => [...row]);
+            for(let j=0;j<matrixSize;j++){
+                temp[j][i]=parseInt(B[0][j]);
+
+            }
+            //console.log("temp: "+temp);
+            
+        }
+
         setResult(a.toFixed(precis));
     };
 
