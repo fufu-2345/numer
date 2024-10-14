@@ -9,10 +9,18 @@ const Regression = () => {
     const [matrixColumn, setMatrixColumn] = useState(1);
     const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
     const [matrixB, setMatrixB] = useState([0, 0]);
+    const [matrixX, setMatrixX] = useState([]);
     const [result, setResult] = useState("");
     const [precis, setPrecis] = useState(7);
     const [m, setM] = useState(2);
     const [selectedOption, setSelectedOption] = useState(1);
+    const [x, setX] = useState(0);
+
+    const handleInputChange = (index, event) => {
+        const newmat = [...matrixX];
+        newmat[index] = event.target.value;
+        setMatrixX(newmat);
+    };
 
     const handleOptionChange = (event) => {
         if(event.target.value!=3){
@@ -58,7 +66,8 @@ const Regression = () => {
     const handleSetPrecis = function (event) {
         if (event.target.value < 0) {
             setPrecis(0);
-        } else if (event.target.value > 99) {
+        } 
+        else if (event.target.value > 99) {
             setPrecis(99);
         } else {
             setPrecis(event.target.value);
@@ -68,11 +77,16 @@ const Regression = () => {
     const handleSetM = function (event) {
         if (event.target.value < 1) {
             setM(1);
-        } else if (event.target.value > 20) {
+        } 
+        else if (event.target.value > 20) {
             setM(20);
         } else {
             setM(event.target.value);
         }
+    };
+
+    const handleSetX = function (event) {
+        setX(event.target.value);
     };
 
     const handleSubmit = (event) => {
@@ -92,7 +106,7 @@ const Regression = () => {
             B[i] = !isNaN(parseFloat(event.target[count].value)) ? parseFloat(event.target[count].value) : 0;
             count += 1;
         }
-
+        
         setMatrix(matrix);
         setMatrixB(B);
         callar(matrix, B);
@@ -103,17 +117,20 @@ const Regression = () => {
         let re = [];
         let temp;
         let size=0;
+        let matA;
+        let matB;
         
+        console.log(matrixX);
         if(selectedOption!=3 && matrixColumn==1){
             let memo=[];
             if(selectedOption==1){
                 size=2;
             }
             else if(selectedOption==2){
-                size=m+1;
+                size=1+parseInt(m);
             }
-            let matA = Array.from({ length: size }, () => Array(size).fill(0));
-            let matB = Array(size).fill(0);
+            matA = Array.from({ length: size }, () => Array(size).fill(0));
+            matB = Array(size).fill(0);
             
             for(let i=0;i<size+size;i++){
                 let sum=0;
@@ -132,7 +149,6 @@ const Regression = () => {
                 }
                 memo.push(sum2); 
             }
-
             for(let i=0;i<size;i++){
                 for(let j=0;j<size;j++){
                     let now=i+j;
@@ -144,18 +160,12 @@ const Regression = () => {
         }
 
 
-
         else if(selectedOption==3){
             size=matrixColumn+1;
-            let matA = Array.from({ length: size }, () => Array(size).fill(0));
-            let matB = Array(size).fill(0);
-
+            matA = Array.from({ length: size }, () => Array(size).fill(0));
+            matB = Array(size).fill(0);
             
             console.log("/////////////////");
-            /*
-            console.log(mat);
-            console.log(matB);*/
-            
             for(let i=0;i<size+size;i++){
                 let sum=0;
                 let sum2=0;
@@ -190,62 +200,65 @@ const Regression = () => {
                     }
                     else{
                         if(i==j){
-                            
+                            for(let k=0;k<matrixRow;k++){
+                                sum2+=matrix[k][i-1]*matrix[k][i-1];
+                            }  
                         }
-                    }
-                    
+                        else {
+                            for(let k=0;k<matrixRow;k++){
+                                sum2+=matrix[k][i-1]*matrix[k][j-1];
+                            }  
+                        }
+                        matA[i][j]=sum2;
+                        matA[j][i]=sum2;
+                    } 
                 }
- 
             }
 
             console.log(matA);
             console.log(matB);
-            
         }
 
-        /*a = det(matrix);
-
+        a = det(matA);
         if (a == "0") {
             console.log("divide by 0");
         }
 
-        for (let i = 0; i < matrixColumn; i++) {
-            temp = matrix.map(row => [...row]);
+        for (let i = 0; i < size; i++) {
+            temp = matA.map(row => [...row]);
 
-            for (let j = 0; j < matrixRow; j++) {
-                temp[j][i] = parseInt(B[j]);
+            for (let j = 0; j < size; j++) {
+                temp[j][i] = parseInt(matB[j]);
             }
-            re.push(`a${i}: ${((det(temp) / a)).toFixed(precis)} `);
+            console.log(  (det(temp) / a).toFixed(precis));
+            re[i]=(det(temp) / a).toFixed(precis);
         }
 
-        setResult2((
+        console.log("re "+re);
+        
+
+        if(selectedOption!=3){
+            let temp=0;
+            for(let i=0;i<re.length;i++){
+                temp+=parseFloat(re[i])*Math.pow(x,i);
+            }
+            re=temp;
+        }
+        else if(selectedOption==3){
+            let temp=parseFloat(re[0]);
+            for(let i=1;i<re.length;i++){
+                temp+=parseFloat(re[i])*matrixX[i-1];
+            }
+            re=temp;
+        }
+
+
+        setResult((
             <div>
                 <p>result:</p>
-                {re.join(", ")}
+                {re}
             </div>
         ));
-
-        setResult(a.toFixed(precis));*/
-    };
-
-    const renderLatexMatrix = (matrix) => {
-        return (
-            "\\begin{pmatrix}\n" +
-            matrix
-                .map((row, index) => row.join(" & ") + (index === matrix.length - 1 ? "\n" : "\\\\\n"))
-                .join("") +
-            "\\end{pmatrix}"
-        );
-    };
-
-    const renderLatexmatrixB = (matrixB) => {
-        return (
-            "\\begin{pmatrix}\n" +
-            matrixB
-                .map((value, index) => value + (index === matrixB.length - 1 ? "\n" : "\\\\\n"))
-                .join("") +
-            "\\end{pmatrix}"
-        );
     };
 
     return (
@@ -264,7 +277,9 @@ const Regression = () => {
                 defaultValue={1}
                 onChange={handleMatrixColumn}
             />
-
+            <br/>
+            <br/>
+            set A
             <form onSubmit={handleSubmit}>
                 {Array.from({ length: matrixRow }, (_, indexRow) => (
                     <div style={{ display: 'flex' }} key={indexRow}>
@@ -280,6 +295,7 @@ const Regression = () => {
                 ))}
 
                 <br />
+                set B
                 {Array.from({ length: matrixRow }, (_, indexRow) => (
                     <div style={{ display: 'flex' }} key={indexRow}>
                         <input
@@ -294,59 +310,77 @@ const Regression = () => {
                 <br />
                 {selectedOption==2 && (
                     <div>
-                        <input type="number" value={m} onChange={handleSetM} /><br />
+                        m:  <input type="number" value={m} onChange={handleSetM} /><br />
+                        
                     </div>
                 )}
 
-                <input type="number" value={precis} onChange={handleSetPrecis} /><br />
+                set precis: <input type="number" value={precis} onChange={handleSetPrecis} /><br />
+                
 
-                <button type="submit">Calculate</button>
+                <br/>
+                {selectedOption!=3 && (
+                    <div>
+                        set X: <input type="number" value={x} onChange={handleSetX} /><br />
+                    </div>
+                )}
+
+                {selectedOption==3 && 
+                    Array.from({ length: matrixColumn }, (_, indexRow) => (
+                        <div style={{ display: 'flex' }} key={indexRow}>
+                            {`set X${indexRow+1}: `}
+                            <input
+                                key={`secondMatrix${indexRow}-0`}
+                                type="text"
+                                value={matrixX[indexRow]}
+                                onChange={(event) => handleInputChange(indexRow, event)}
+                                name={`MatrixX${indexRow}`}
+                            />
+                        </div>
+                    ))
+                }
+                
+
+                <button type="submit">Calculate</button>     
             </form>
 
             <br /><br />
             <div>{result}</div>
-
-            <BlockMath math={"A = " + renderLatexMatrix(matrix)} />
-            <br />
-            <BlockMath math={"B = " + renderLatexmatrixB(matrixB)} />
-            <br />
-
             <br />
 
             <div>
 
-            <label>
-                <input
-                    type="radio"
-                    value="1"
-                    checked={selectedOption == '1'}
-                    onChange={handleOptionChange}
-                />
-                Linear Regression
-            </label>
-            <br />
-            <label>
-                <input
-                    type="radio"
-                    value="2"
-                    checked={selectedOption == '2'}
-                    onChange={handleOptionChange}
-                />
-                Polynomail Regression
-            </label>
-            <br />
-            <label>
-                <input
-                    type="radio"
-                    value="3"
-                    checked={selectedOption == '3'}
-                    onChange={handleOptionChange}
-                />
-                Multiple Linear Regression
-            </label>
-            <br />
-            <p>{selectedOption}</p>
-        </div>
+                <label>
+                    <input
+                        type="radio"
+                        value="1"
+                        checked={selectedOption == '1'}
+                        onChange={handleOptionChange}
+                    />
+                    Linear Regression
+                </label>
+                <br />
+                <label>
+                    <input
+                        type="radio"
+                        value="2"
+                        checked={selectedOption == '2'}
+                        onChange={handleOptionChange}
+                    />
+                    Polynomail Regression
+                </label>
+                <br />
+                <label>
+                    <input
+                        type="radio"
+                        value="3"
+                        checked={selectedOption == '3'}
+                        onChange={handleOptionChange}
+                    />
+                    Multiple Linear Regression
+                </label>
+                <br /><br /><br /><br /><br />
+            </div>
 
         </div>
     );
