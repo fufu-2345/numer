@@ -7,8 +7,10 @@ import { det } from 'mathjs';
 const CramerRule = () => {
     const [matrixSize, setMatrixSize] = useState(2);
     const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
+    const [matrixB, setMatrixB] = useState([0, 0]);
     const [result, setResult] = useState("");
     const [precis, setPrecis] = useState(7);
+    const [result2, setResult2] = useState("");
 
     const handleMatrixSize = (e) => {
         let val=2;
@@ -43,7 +45,7 @@ const CramerRule = () => {
         event.preventDefault();
         let count=0;
         const matrix=Array.from({ length: matrixSize },()=>Array(matrixSize).fill(0));
-        const B=Array.from({ length: 1 }, ()=>Array(matrixSize).fill(0));
+        const B=Array(matrixSize).fill(0);
 
         for(let i=0;i< matrixSize;i++) {
             for(let j=0;j<matrixSize;j++){
@@ -53,38 +55,63 @@ const CramerRule = () => {
         }
 
         for(let i=0;i< matrixSize;i++) {
-            B[0][i]=!isNaN(parseFloat(event.target[count].value)) ? parseFloat(event.target[count].value) : 0;
+            B[i]=!isNaN(parseFloat(event.target[count].value)) ? parseFloat(event.target[count].value) : 0;
             count+=1;
         }
 
         //setB(B);
         setMatrix(matrix);
+        setMatrixB(B);
         callar(matrix,B);
     };
 
     const callar=(matrix,B)=>{
         let a = 0;
+        let re=[];
         let temp;
         a=det(matrix);
 
-        for(let i=0;i<matrixSize;i++){
-            temp = matrix.map(row => [...row]);
-            for(let j=0;j<matrixSize;j++){
-                temp[j][i]=parseInt(B[0][j]);
-
-            }
-            //console.log("temp: "+temp);
-            
+        if(a=="0"){
+            console.log("divide by 0");
         }
 
+        console.log(matrixSize);
+        for(let i=0;i<matrixSize;i++){
+            temp = matrix.map(row => [...row]);
+
+            for(let j=0;j<matrixSize;j++){
+                temp[j][i]=parseInt(B[j]);
+            }
+            re.push(`a${i}: ${((det(temp)/a)).toFixed(precis)} `);
+        }
+
+        setResult2((
+            <div>
+                <p>result:</p>
+                {re.join(", ")}
+            </div>
+        ));
+        
+        console.log(B);
         setResult(a.toFixed(precis));
     };
+
 
     const renderLatexMatrix=(matrix)=>{
         return (
             "\\begin{pmatrix}\n" +
             matrix
                 .map((row, index)=>row.join(" & ") + (index === matrix.length - 1 ? "\n" : "\\\\\n"))
+                .join("") +
+            "\\end{pmatrix}"
+        );
+    };
+
+    const renderLatexmatrixB = (matrixB) => {
+        return (
+            "\\begin{pmatrix}\n" +
+            matrixB
+                .map((value, index) => value + (index === matrixB.length - 1 ? "\n" : "\\\\\n"))
                 .join("") +
             "\\end{pmatrix}"
         );
@@ -116,18 +143,17 @@ const CramerRule = () => {
                 ))}
 
                 <br />
-                {Array.from({ length: 1 }, (_, indexRow) => (
-                    <div style={{ display: 'flex' }} key={indexRow}>
-                        {Array.from({ length: matrixSize }, (_, indexColumn) => (
-                            <input
-                                key={`secondMatrix${indexRow}-${indexColumn}`}
-                                type="text"
-                                defaultValue={null}
-                                name={`secondMatrix${indexColumn}`}
-                            />
-                        ))}
+                {Array.from({ length: matrixSize }, (_, indexRow) => (
+                    <div style={{ display: 'flex'}} key={indexRow}>
+                        <input
+                        key={`secondMatrix${indexRow}-0`}
+                        type="text"
+                        defaultValue={null}
+                        name={`secondMatrix${indexRow}`}
+                        />
                     </div>
                 ))}
+
                 <br/>
                 <input type="number" value={precis} onChange={handleSetPrecis} /><br/>
 
@@ -138,6 +164,13 @@ const CramerRule = () => {
             <div>{result}</div>
 
             <BlockMath math={"A = " + renderLatexMatrix(matrix)} />
+            <br/>
+            <BlockMath math={"B = " + renderLatexmatrixB(matrixB)} />
+            <br/>
+            <div>{result2}</div>
+            <br/>
+            <br/>
+            
         </div>
     );
 };

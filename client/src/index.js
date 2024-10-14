@@ -17,7 +17,8 @@ import CramerRule from './method/linearAlgebra/cramerRule';
 
 /////Iterpolation
 import Lagrange from './method/interPolation/lagrange';
-import Spline from './method/interPolation/spline';
+import Spline from './method/interPolation/spline';  ////// not done
+import Regression from './method/interPolation/regression';  ////// not done
 
 
 
@@ -64,6 +65,11 @@ const router = createBrowserRouter([
     path: "/Spline",
     element: <Spline/>,
   },
+  {
+    path: "/Regression",
+    element: <Regression/>,
+  },
+  
 
 
 
