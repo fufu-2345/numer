@@ -271,12 +271,13 @@ const Regression = () => {
                 defaultValue={2}
                 onChange={handleMatrixRow}
             />
-
+            {selectedOption==3 && (
             <input
                 type="number"
                 defaultValue={1}
                 onChange={handleMatrixColumn}
             />
+            )}
             <br/>
             <br/>
             set A

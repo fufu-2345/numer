@@ -24,7 +24,14 @@ const App = () => {
             <div><Link to="/Spline">Spline</Link></div>
             <br/>
             <div><Link to="/Regression">Regression</Link></div>
+            <br/><br/><br/><br/><br/>
+            <div><Link to="/Trapezoidal">Trapezoidal</Link></div>
             <br/>
+            <div><Link to="/Simpson">Simpson</Link></div>
+            <br/>
+            <div><Link to="/Diff">Diff</Link></div>
+            <br/>
+            <br/><br/><br/>
         </div>
     );
 };

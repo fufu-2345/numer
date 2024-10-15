@@ -18,9 +18,13 @@ import CramerRule from './method/linearAlgebra/cramerRule';
 /////Iterpolation
 import Lagrange from './method/interPolation/lagrange';
 import Spline from './method/interPolation/spline';  ////// not done
-import Regression from './method/interPolation/regression';  ////// not done
+import Regression from './method/interPolation/regression';
 
 
+/////// diff & integrate
+import Trapezoidal from './method/integrate/trapezoidal';
+import Simpson from './method/integrate/simpson';
+import Diff from './method/integrate/diff';
 
 
 import {
@@ -69,10 +73,22 @@ const router = createBrowserRouter([
     path: "/Regression",
     element: <Regression/>,
   },
+  {
+    path: "/Trapezoidal",
+    element: <Trapezoidal/>,
+  },
+  {
+    path: "/Simpson",
+    element: <Simpson/>,
+  },
+  {
+    path: "/Diff",
+    element: <Diff/>,
+  },
+  
   
 
-
-
+  
 ]);
 
 
