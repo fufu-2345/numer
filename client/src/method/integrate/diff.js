@@ -17,6 +17,7 @@ const Diff = () => {
     const [n, setN] = useState(parseFloat(1));
     let tri1=[];
     let tri2=[];
+    let tri3=[];
 
 
     const calcu = function (){
@@ -32,7 +33,7 @@ const Diff = () => {
                 newtri1(n);
                 console.log(tri1);
                 for(let i=0;i<parseInt(n)+1;i++){
-                    let check=(  evaluate(Equation,{x: tempx-(h*i)})  )*sign*tri1[i]
+                    let check=(  evaluate(Equation,{x: tempx-(h*i)})  )*sign*tri1[i];
                     console.log(check);
                     temp+=check;
                     sign*=-1;
@@ -47,7 +48,7 @@ const Diff = () => {
                 newtri1(n);
                 console.log(tri1);
                 for(let i=0;i<parseInt(n)+1;i++){
-                    let check=(  evaluate(Equation,{x: x-(h*i)})  )*sign*tri1[i]
+                    let check=(  evaluate(Equation,{x: x-(h*i)})  )*sign*tri1[i];
                     console.log(check);
                     temp+=check;
                     sign*=-1;
@@ -57,6 +58,7 @@ const Diff = () => {
             }
 
         
+            ///// central
             else if(selectedOption2==3){
                 let tempx=x+(h*parseInt((n+1)/2));
                 console.log("tempx: "+tempx);
@@ -103,7 +105,7 @@ const Diff = () => {
                 let tempx=x+(h*(n+1));
                 newtri2(n);
                 for(let i=0;i<tri2.length;i++){
-                    let check=(  evaluate(Equation,{x: tempx-(h*i)})  )*sign*tri2[i]
+                    let check=(  evaluate(Equation,{x: tempx-(h*i)})  )*sign*tri2[i];
                     console.log(check);
                     temp+=check;
                     sign*=-1;
@@ -119,7 +121,7 @@ const Diff = () => {
                 let tempx=x-(h*(n+1));
                 newtri2(n);
                 for(let i=0;i<tri2.length;i++){
-                    let check=(  evaluate(Equation,{x: tempx+(h*i)})  )*sign*tri2[i]
+                    let check=(  evaluate(Equation,{x: tempx+(h*i)})  )*sign*tri2[i];
                     console.log(check);
                     temp+=check;
                     sign*=-1;
@@ -132,9 +134,26 @@ const Diff = () => {
             }
 
 
-
-            else{
-                console.log("this is low error");
+            /// central
+            if(selectedOption2==3){
+                newtri3(n);
+                let sign=-1;
+                console.log(tri3);
+                let tempx=parseFloat(x)+(h*  parseInt(tri3.length/2)   );
+                for(let i=0;i<parseInt(n)+3;i++){
+                    if(  (n+3)/2==i){
+                        //console.log("I: "+i);
+                        tempx-=h;
+                    }
+                    let check=(  evaluate(Equation,{x: tempx-(h*i)})  )*sign*tri3[i];
+                    sign*=-1;
+                    console.log("i "+(tempx-(h*i))+" check "+check);
+                    temp+=check;
+                }
+                //console.log(temp);
+                temp/=Math.pow(h,n);
+                
+                setResult(temp.toFixed(precis));
             }
 
             
@@ -164,7 +183,7 @@ const Diff = () => {
         a=tri1;
 
         newtri1(n+1);
-        
+
         for(let i=0;i<(tri1.length);i++){
             b.push(tri1[i]*(0.5*n));
         }
@@ -174,6 +193,27 @@ const Diff = () => {
             temp.push(a[i]+b[i+1]);
         }
         tri2=temp;
+    }
+
+
+    function newtri3(n){
+        if(n==1){
+            tri3=[1/12,8/12,8/12,1/12];
+        }
+        else if(n==2){
+            tri3=[1/12,16/12,30/12,16/12,1/12];
+        }
+        else if(n==3){
+            tri3=[1/8,8/8,13/8,13/8,8/8,1/8];
+        }
+        else if(n==4){  
+            tri3=[1/6,12/6,39/6,56/6,39/6,12/6,1/6];
+        }
+        else{
+            console.log("ERROR");
+            setResult("ERROR");
+        }
+        //console.log(tri3);
     }
     
 
