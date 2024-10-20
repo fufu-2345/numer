@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BlockMath } from 'react-katex';
+import { Button } from 'react-bootstrap';
 import '../../style.css';
 import { det } from 'mathjs';
+import axios from 'axios';
 
 const CramerRule = () => {
     const [matrixSize, setMatrixSize] = useState(2);
@@ -107,6 +109,24 @@ const CramerRule = () => {
         );
     };
 
+    const handleTEST=function(event){
+        axios.get('http://localhost:5000/cramerRule')
+        .then((response) => {
+            console.log(response.data);
+
+            const message = document.getElementById('message');
+            message.innerHTML = response.data.message;
+
+            const numbers = response.data.numbers;
+            numbers.forEach((num) => {
+            console.log(num); 
+            });
+        })
+        .catch((error) => {
+            console.error('เกิดข้อผิดพลาด:', error); 
+        });
+    }
+
     const renderLatexmatrixB = (matrixB) => {
         return (
             "\\begin{pmatrix}\n" +
@@ -160,6 +180,8 @@ const CramerRule = () => {
                 <button type="submit">Calculated</button>
             </form>
 
+            <button onClick={handleTEST}>TEST</button>
+            
             <br/><br/>
             <div>{result}</div>
 
