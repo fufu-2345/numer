@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { BlockMath } from 'react-katex';
 import { Button } from 'react-bootstrap';
@@ -13,6 +13,8 @@ const CramerRule = () => {
     const [result, setResult] = useState("");
     const [precis, setPrecis] = useState(7);
     const [result2, setResult2] = useState("");
+    const [ids, setIds] = useState([]);
+    const [selectedId, setSelectedId] = useState("");
 
     const handleMatrixSize = (e) => {
         let val=2;
@@ -110,35 +112,45 @@ const CramerRule = () => {
     };
 
     const handleTEST=function(event){
-        axios.get('http://localhost:5000/cramerRule')
+        axios.get('http://localhost:5000/cramerRule/id' ,{
+            params: { selectedId }
+        })
         .then((response) => {
-            console.log("API: ");
-            console.log(response.data);
+            console.log("API response:", response.data);
             
-            const matrixTemp = response.data.map(function(item) {
-                return [item.a, item.b]; 
+            const fromAPI = response.data.map(function(item) {
+                return [item.matrixVal, item.matSize];
             });
-            
-            
-            setMatrix(matrixTemp);
-            /*eee
-            const message = document.getElementById('message');
-            
-            if (message) {
-                message.innerHTML = response.data.message;
-            } else {
-                console.error('element with id "message" is not found in DOM');
-            }
 
-            const numbers = response.data.numbers;
-            numbers.forEach((num) => {
-            console.log(num); 
-            });*/
+            console.log("/////////////");
+            console.log(fromAPI[0][0]);
+            console.log(fromAPI[0][1]);
+
+            setMatrixSize(parseInt(fromAPI[0][1]));
+            //setMatrix(parseInt(fromAPI[0][0]));   
         })
         .catch((error) => {
             console.error('เกิดข้อผิดพลาด:', error); 
         });
     }
+
+
+    useEffect(() => {
+        const fetchIds = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/cramerrule');
+                setIds(response.data);
+            } catch (error) {
+                console.error('Error fetching idCramer:', error);
+            }
+        };
+
+        fetchIds();
+    }, []);
+
+    const handleSelect = (event) => {
+        setSelectedId(event.target.value); // ตั้งค่าที่เลือก
+    };
 
     const renderLatexmatrixB = (matrixB) => {
         return (
@@ -152,12 +164,14 @@ const CramerRule = () => {
 
     return (
         <div>
+
+
             <div><Link to="/">back</Link></div>
             <h1>CramerRule</h1>
 
             <input
                 type="number"
-                defaultValue={2}
+                value={matrixSize}
                 onChange={handleMatrixSize}
             />
 
@@ -197,9 +211,19 @@ const CramerRule = () => {
 
                 <button type="submit">Calculated</button>
             </form>
-
-            <button onClick={handleTEST}>TEST</button>
             
+
+            <select value={selectedId} onChange={handleSelect}>
+                <option value="">Select ID</option>
+                {ids.map(id => (
+                    <option key={id} value={id}>{id}</option>
+                ))}
+            </select>
+            <button onClick={handleTEST}>Copy</button>
+            
+            <br/>
+            {selectedId && <p>selected: {selectedId}</p>}
+
             <br/><br/>
             <div>{result}</div>
 

@@ -22,14 +22,35 @@ app.get('/', (req, res) => {
     res.json('testtt123');
 });
 
+
 app.get("/cramerrule", (req,res) =>{
-    const a="SELECT * FROM cramerrule";
+    const a = "SELECT id FROM cramerrule";
+
+    //const a=`SELECT * FROM cramerrule WHERE id= {temp}`;
     db.query(a,(err,data) =>{
+
+        if(err) return res.json(err);
+        const ids = data.map(row => row.id);
+        return res.json(ids);
+    })
+})
+
+
+app.get("/cramerrule/id", (req,res) =>{
+    const selectedId = req.query.selectedId;
+
+    const response = {
+        selectedId: selectedId
+    };
+
+    //
+    const a = `SELECT * FROM cramerrule WHERE id = ?`;
+    db.query(a,[selectedId],(err,data) =>{
         if(err) return res.json(err);
         return res.json(data);
     })
-
 })
  
+
 app.listen(port,() => {console.log(`port ${port}(server) is updated/started`)})
 
