@@ -8,8 +8,8 @@ import axios from 'axios';
 
 const CramerRule = () => {
     const [matrixSize, setMatrixSize] = useState(2);
-    const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
-    const [matrixB, setMatrixB] = useState([0, 0]);
+    const [matrix, setMatrix] = useState([[null, null], [null, null]]);
+    const [matrixB, setMatrixB] = useState([null, null]);
     const [result, setResult] = useState("");
     const [precis, setPrecis] = useState(7);
     const [result2, setResult2] = useState("");
@@ -112,15 +112,28 @@ const CramerRule = () => {
     const handleTEST=function(event){
         axios.get('http://localhost:5000/cramerRule')
         .then((response) => {
+            console.log("API: ");
             console.log(response.data);
-
+            
+            const matrixTemp = response.data.map(function(item) {
+                return [item.a, item.b]; 
+            });
+            
+            
+            setMatrix(matrixTemp);
+            /*eee
             const message = document.getElementById('message');
-            message.innerHTML = response.data.message;
+            
+            if (message) {
+                message.innerHTML = response.data.message;
+            } else {
+                console.error('element with id "message" is not found in DOM');
+            }
 
             const numbers = response.data.numbers;
             numbers.forEach((num) => {
             console.log(num); 
-            });
+            });*/
         })
         .catch((error) => {
             console.error('เกิดข้อผิดพลาด:', error); 
@@ -155,8 +168,13 @@ const CramerRule = () => {
                             <input
                                 key={`${indexRow}-${indexColumn}`}
                                 type="text"
-                                defaultValue={null}
+                                value={matrix[indexRow] ? matrix[indexRow][indexColumn] : ''}
                                 name={`matrix${indexRow}-${indexColumn}`}
+                                onChange={(e) => {
+                                    const newMatrix = [...matrix];
+                                    newMatrix[indexRow][indexColumn] = e.target.value;
+                                    setMatrix(newMatrix);
+                                }}
                             />
                         ))}
                     </div>
