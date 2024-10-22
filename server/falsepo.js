@@ -3,7 +3,7 @@ import mysql from "mysql";
 import cors from "cors";
 
 const app = express();
-const port =5010;
+const port =5020;
 app.use(cors());
 
 //  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Abc810254795342320121448';
@@ -19,12 +19,12 @@ const db= mysql.createConnection({
 })
  
 app.get('/', (req, res) => {  
-    res.json('this is bisec');
+    res.json('this is false position');
 });
 
 
-app.get("/bisection", (req,res) =>{
-    const a = "SELECT id FROM bisection";
+app.get("/falseposi", (req,res) =>{
+    const a = "SELECT id FROM falseposi";
 
     db.query(a,(err,data) =>{
 
@@ -35,14 +35,14 @@ app.get("/bisection", (req,res) =>{
 })
 
 
-app.get("/bisection/id", (req,res) =>{
+app.get("/falseposi/id", (req,res) =>{
     const selectedId = req.query.selectedId;
 
     const response = {
         selectedId: selectedId
     };
 
-    const a = `SELECT * FROM bisection WHERE id = ?`;
+    const a = `SELECT * FROM falseposi WHERE id = ?`;
     db.query(a,[selectedId],(err,data) =>{
         if(err) return res.json(err);
         return res.json(data);

@@ -19,7 +19,7 @@ const db= mysql.createConnection({
 })
  
 app.get('/', (req, res) => {  
-    res.json('testtt123');
+    res.json('this is cramer rule');
 });
 
 

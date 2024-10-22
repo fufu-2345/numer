@@ -149,7 +149,7 @@ const CramerRule = () => {
     }, []);
 
     const handleSelect = (event) => {
-        setSelectedId(event.target.value); // ตั้งค่าที่เลือก
+        setSelectedId(event.target.value);
     };
 
     const renderLatexmatrixB = (matrixB) => {

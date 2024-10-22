@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "main": "sever.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm start"
+    "start": "concurrently \"npm run cramer\" \"npm run bisec\" \"npm run falseposi\" \"npm run client\"",
+    "cramer": "cd server && cross-env PORT=5000 nodemon server.js",
+    "bisec": "cd server && cross-env PORT=5010 nodemon bisec.js",
+    "falseposi": "cd server && cross-env PORT=5020 nodemon falsepo.js",
+    "client": "cd client && cross-env PORT=3000 npm start",
+    "dev": "nodemon server.js"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "concurrently": "^9.0.1"
+    "concurrently": "^9.0.1",
+    "cross-env": "^7.0.3"
   }
 }

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import { evaluate } from 'mathjs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../../style.css';
+import axios from 'axios';
 
 const FalsePosition = () => {
     const [data, setData] = useState([{ iteration: 0, Xl: 0, Xm: 0, Xr: 0 ,Error: 0}]);
@@ -15,6 +16,50 @@ const FalsePosition = () => {
     const [e ,setError] = useState(0.000001);
     const [checkboxVal, setCheckboxVal] = useState(Array(2).fill(true));
     let checktext = ["Xm", "Error"];
+    const [selectedId, setSelectedId] = useState("");
+    const [ids, setIds] = useState([]);
+
+
+    const handleTEST=function(event){
+        axios.get('http://localhost:5020/falseposi/id' ,{
+            params: { selectedId }
+        })
+        .then((response) => {
+            console.log("API response:", response.data);
+
+            const fromAPI = response.data.map(function(item) {
+                return [item.equation, item.xl, item.xr];
+            });
+
+            console.log("/////////////");
+
+            setEquation(fromAPI[0][0]);
+            setXL(fromAPI[0][1]);
+            setXR(fromAPI[0][2]);
+            //setMatrix(parseInt(fromAPI[0][0]));
+        })
+        .catch((error) => {
+            console.error('เกิดข้อผิดพลาด:', error); 
+        });
+    }
+
+    useEffect(() => {
+        const fetchIds = async () => {
+            try {
+                const response = await axios.get('http://localhost:5020/falseposi');
+                setIds(response.data);
+            } catch (error) {
+                console.error('Error fetching idCramer:', error);
+            }
+        };
+
+        fetchIds();
+    }, []);
+
+    const handleSelect = (event) => {
+        setSelectedId(event.target.value);
+    };
+
 
     const error = function (xold, xnew){
         return Math.abs(    (xnew - xold)    /xnew)       *100;
@@ -197,6 +242,16 @@ const FalsePosition = () => {
             
             <br />
             <h5>Answer = {X.toFixed(precis)}</h5>
+
+            <select value={selectedId} onChange={handleSelect}>
+                <option value="">Select ID</option>
+                {ids.map(id => (
+                    <option key={id} value={id}>{id}</option>
+                ))}
+            </select>
+            <button onClick={handleTEST}>Copy</button>
+
+
             <Container>
                 <Table striped bordered hover variant="dark">
                     <thead>
