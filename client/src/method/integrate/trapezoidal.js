@@ -5,8 +5,9 @@ import { evaluate } from 'mathjs';
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import '../../style.css';
+import axios from 'axios';
 
-const Bisection = () => {
+const Trapezoidal = () => {
     const [Equation, setEquation] = useState("(4x^5-3x^4+x^3-6x+2)");
     const [result, setResult] = useState(0);
     const [precis, setPrecis] = useState(7);
@@ -14,6 +15,48 @@ const Bisection = () => {
     const [a, setA] = useState(2);
     const [b, setB] = useState(8);
     const [n, setN] = useState(2);
+    const [selectedId, setSelectedId] = useState("");
+    const [ids, setIds] = useState([]);
+
+
+    const handleTEST=function(event){
+        axios.get('http://localhost:5300/Trapezoidal/id' ,{
+            params: { selectedId }
+        })
+        .then((response) => {
+            console.log("API response:", response.data);
+
+            const fromAPI = response.data.map(function(item) {
+                return [item.equation, item.a, item.b];
+            });
+
+            console.log("/////////////");
+
+            setEquation(fromAPI[0][0]);
+            setA(fromAPI[0][1]);
+            setB(fromAPI[0][2]);
+        })
+        .catch((error) => {
+            console.error('เกิดข้อผิดพลาด:', error); 
+        });
+    }
+
+    useEffect(() => {
+        const fetchIds = async () => {
+            try {
+                const response = await axios.get('http://localhost:5300/Trapezoidal');
+                setIds(response.data);
+            } catch (error) {
+                console.error('Error fetching idCramer:', error);
+            }
+        };
+
+        fetchIds();
+    }, []);
+
+    const handleSelect = (event) => {
+        setSelectedId(event.target.value);
+    };
 
 
     const calcu = function ( a,b){
@@ -162,7 +205,14 @@ const Bisection = () => {
                     Calculate
                 </Button>
             </Form>
-            
+            <br/>
+            <select value={selectedId} onChange={handleSelect}>
+                <option value="">Select ID</option>
+                {ids.map(id => (
+                    <option key={id} value={id}>{id}</option>
+                ))}
+            </select>
+            <button onClick={handleTEST}>Copy</button> 
     
             <br/><br/><br/>
     
@@ -172,4 +222,4 @@ const Bisection = () => {
     
 }
 
-export default Bisection;
+export default Trapezoidal;
