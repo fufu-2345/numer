@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import { evaluate } from 'mathjs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../../style.css';
+import axios from 'axios';
 
 const OnepointIteration = () => {
     const [data, setData] = useState([{ iteration: 0, Xm: 0 ,Error: 0 }]);
@@ -14,6 +15,49 @@ const OnepointIteration = () => {
     const [e ,setError] = useState(0.000001);
     const [checkboxVal, setCheckboxVal] = useState(Array(2).fill(true));
     let checktext = ["Xm", "Error"];
+    const [selectedId, setSelectedId] = useState("");
+    const [ids, setIds] = useState([]);
+
+
+    const handleTEST=function(event){
+        axios.get('http://localhost:5030/onepoint/id' ,{
+            params: { selectedId }
+        })
+        .then((response) => {
+            console.log("API response:", response.data);
+
+            const fromAPI = response.data.map(function(item) {
+                return [item.equation, item.xin];
+            });
+
+            console.log("/////////////");
+
+            setEquation(fromAPI[0][0]);
+            setXin(fromAPI[0][1]);
+            //setMatrix(parseInt(fromAPI[0][0]));
+        })
+        .catch((error) => {
+            console.error('เกิดข้อผิดพลาด:', error); 
+        });
+    }
+
+    useEffect(() => {
+        const fetchIds = async () => {
+            try {
+                const response = await axios.get('http://localhost:5030/onepoint');
+                setIds(response.data);
+            } catch (error) {
+                console.error('Error fetching idCramer:', error);
+            }
+        };
+
+        fetchIds();
+    }, []);
+
+    const handleSelect = (event) => {
+        setSelectedId(event.target.value);
+    };
+
 
     const handleCheckbox = (index) => {
         const temp = [...checkboxVal];
@@ -178,6 +222,16 @@ const OnepointIteration = () => {
             
             <br />
             <h5>Answer = {X.toFixed(precis)}</h5>
+
+            <select value={selectedId} onChange={handleSelect}>
+                <option value="">Select ID</option>
+                {Array.isArray(ids) && ids.map(id => (
+                    <option key={id} value={id}>{id}</option>
+                ))}
+            </select>
+            <button onClick={handleTEST}>Copy</button>
+
+
             <Container>
                 <Table striped bordered hover variant="dark">
                     <thead>
