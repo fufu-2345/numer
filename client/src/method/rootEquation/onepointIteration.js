@@ -225,7 +225,7 @@ const OnepointIteration = () => {
 
             <select value={selectedId} onChange={handleSelect}>
                 <option value="">Select ID</option>
-                {Array.isArray(ids) && ids.map(id => (
+                {ids.map(id => (
                     <option key={id} value={id}>{id}</option>
                 ))}
             </select>
