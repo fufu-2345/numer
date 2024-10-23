@@ -5,6 +5,7 @@ import { evaluate } from 'mathjs';
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import '../../style.css';
+import axios from 'axios';
 
 const Diff = () => {
     const [Equation, setEquation] = useState("(e^x)");
@@ -18,6 +19,50 @@ const Diff = () => {
     let tri1=[];
     let tri2=[];
     let tri3=[];
+    const [selectedId, setSelectedId] = useState("");
+    const [ids, setIds] = useState([]);
+
+
+    const handleTEST=function(event){
+        axios.get('http://localhost:5320/diff/id' ,{
+            params: { selectedId }
+        })
+        .then((response) => {
+            console.log("API response:", response.data);
+
+            const fromAPI = response.data.map(function(item) {
+                return [item.equation,item.n,item.x,item.h];
+            });
+
+            console.log("/////////////");
+
+            setEquation(fromAPI[0][0]);
+            setN(fromAPI[0][1]);
+            setX(fromAPI[0][2]);
+            setH(fromAPI[0][3]);
+
+        })
+        .catch((error) => {
+            console.error('เกิดข้อผิดพลาด:', error); 
+        });
+    }
+
+    useEffect(() => {
+        const fetchIds = async () => {
+            try {
+                const response = await axios.get('http://localhost:5320/diff');
+                setIds(response.data);
+            } catch (error) {
+                console.error('Error fetching idCramer:', error);
+            }
+        };
+
+        fetchIds();
+    }, []);
+
+    const handleSelect = (event) => {
+        setSelectedId(event.target.value);
+    };
 
 
     const calcu = function (){
@@ -393,6 +438,15 @@ const Diff = () => {
                 </Button>
             </Form>
             
+            <br/>
+            <select value={selectedId} onChange={handleSelect}>
+                <option value="">Select ID</option>
+                {ids.map(id => (
+                    <option key={id} value={id}>{id}</option>
+                ))}
+            </select>
+            <button onClick={handleTEST}>Copy</button> 
+
     
             <br/><br/><br/>
     
