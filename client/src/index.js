@@ -4,6 +4,7 @@ import App  from './App'
 import './style.css';
 
 /////rootequation
+import Grapical from './method/rootEquation/grapical';
 import Bisection from './method/rootEquation/bisection';
 import FalsePosition  from './method/rootEquation/falsePosition';
 import OnepointIteration  from './method/rootEquation/onepointIteration';
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App/>,
+  },
+  {
+    path: "/Grapical",
+    element: <Grapical/>,
   },
   {
     path: "/Bisection",

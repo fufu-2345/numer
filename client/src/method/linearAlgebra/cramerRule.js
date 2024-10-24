@@ -112,7 +112,7 @@ const CramerRule = () => {
     };
 
     const handleTEST=function(event){
-        axios.get('http://localhost:5000/cramerRule/id' ,{
+        axios.get('http://localhost:5100/cramerRule/id' ,{
             params: { selectedId }
         })
         .then((response) => {
@@ -138,7 +138,7 @@ const CramerRule = () => {
     useEffect(() => {
         const fetchIds = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/cramerrule');
+                const response = await axios.get('http://localhost:5100/cramerrule');
                 setIds(response.data);
             } catch (error) {
                 console.error('Error fetching idCramer:', error);

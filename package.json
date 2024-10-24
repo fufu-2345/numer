@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "main": "sever.js",
   "scripts": {
-    "start": "concurrently \"npm run bisec\" \"npm run falseposi\" \"npm run onepoint\" \"npm run newtonRap\" \"npm run secant\" \"npm run cramer\" \"npm run trapezoidal\" \"npm run simpson\" \"npm run diff\" \"npm run client\"",
+    "start": "concurrently \"npm run grapical\" \"npm run bisec\" \"npm run falseposi\" \"npm run onepoint\" \"npm run newtonRap\" \"npm run secant\" \"npm run cramer\" \"npm run trapezoidal\" \"npm run simpson\" \"npm run diff\" \"npm run client\"",
     "client": "cd client && cross-env PORT=3000 npm start",
     
+    "grapical": "cd server && cd method && cd rootequation && cross-env PORT=5000 nodemon grapical.js",
     "bisec": "cd server && cd method && cd rootequation && cross-env PORT=5010 nodemon bisec.js",
     "falseposi": "cd server && cd method && cd rootequation && cross-env PORT=5020 nodemon falsepo.js",
     "onepoint": "cd server && cd method && cd rootequation && cross-env PORT=5030 nodemon onepoint.js",
     "newtonRap": "cd server && cd method && cd rootequation && cross-env PORT=5040 nodemon newtonRap.js",
     "secant": "cd server && cd method && cd rootequation && cross-env PORT=5050 nodemon secant.js",
     
-    "cramer": "cd server && cd method && cd linearAlgebra && cross-env PORT=5000 nodemon cramer.js",
+    "cramer": "cd server && cd method && cd linearAlgebra && cross-env PORT=5100 nodemon cramer.js",
 
  
     "trapezoidal": "cd server && cd method && cd diff/inte && cross-env PORT=5300 nodemon trapezoidal.js",

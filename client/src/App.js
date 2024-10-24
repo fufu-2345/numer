@@ -7,6 +7,8 @@ const App = () => {
         <div>
             <p>HOMEEEE</p>
             <br/><br/>
+            <div><Link to="/Grapical">Grapical</Link></div>
+            <br/>
             <div><Link to="/Bisection">Bisection</Link></div>
             <br/>
             <div><Link to="/falsePosition">False position</Link></div>

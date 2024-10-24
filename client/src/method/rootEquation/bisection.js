@@ -237,7 +237,6 @@ const Bisection = () => {
             <br/><br/><br/>
     
             <h5>Answer = {X.toFixed(precis)}</h5>
-
             
 
             <select value={selectedId} onChange={handleSelect}>
