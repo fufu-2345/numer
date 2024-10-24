@@ -4,15 +4,15 @@ import { BlockMath } from 'react-katex';
 import '../../style.css';
 import { det } from 'mathjs';
 
-const CramerRule = () => {
+const GaussJordan = () => {
     const [matrixSize, setMatrixSize] = useState({ rows: 2, columns: 2 });
-    const [matrix, setMatrix] = useState([[0, 0], [0, 0]]);
-    const [B, setB] = useState(Array(matrixSize.rows).fill(0));
+    const [matrix, setMatrix] = useState(Array(matrixSize.rows).fill().map(() => Array(matrixSize.columns).fill(null)))
+    const [B, setB] = useState(Array(matrixSize.rows).fill(null));
     const [result, setResult] = useState("");
     const [precis, setPrecis] = useState(7);
 
 
-    const handleMatrixsizeRow = (e) => {
+    const handleMatrixsize = (e) => {
         let val=2;
         if(e.target.value<2){
             val=2;
@@ -26,26 +26,24 @@ const CramerRule = () => {
 
         e.target.value =val;
         const row = parseInt(val);
-        setMatrixSize((prevSize) => ({ ...prevSize, rows: row }));
+        const col = parseInt(val);
+        setMatrixSize((prevSize) => ({ rows: row, columns: col }));
+
+        setMatrix(Array(row).fill().map(() => Array(col).fill(null)));
+        setB(Array(row).fill(null));
     };
 
-    const handleMatrixsizeCollum = (e) => {
-        let val=2;
-        if(e.target.value<2){
-            val=2;
-        }
-        else if(e.target.value>8){
-            val=8;
-        }
-        else{
-            val=e.target.value;
-        } 
+    const handlematA = (row, col, value) => {
+        const newmatA = [...matrix];
+        newmatA[row][col] = parseFloat(value);
+        setMatrix(newmatA);
+    }
 
-        e.target.value =val;
-        const collum = parseInt(val);
-        setMatrixSize((prevSize) => ({ ...prevSize, columns: collum }));
-    };
-
+    const handlematB = (row, value) => {
+        const newmatB = [...B];
+        newmatB[row] = parseFloat(value);
+        setB(newmatB);
+    }
 
     const handleSetPrecis=function(event){
         if(event.target.value<0){
@@ -109,50 +107,45 @@ const CramerRule = () => {
     return (
         <div>
             <div><Link to="/">back</Link></div>
-            <h1>CramerRule</h1>
+            <h1>GaussJordan</h1>
 
             <input
                 type="number"
                 defaultValue={2}
-                onChange={handleMatrixsizeRow}
+                onChange={handleMatrixsize}
             />
 
-            <input
-                type="number"
-                defaultValue={2}
-                onChange={handleMatrixsizeCollum}
-            />
-
-            <form onSubmit={handleSubmit}>
-                {Array.from({ length: matrixSize.rows }, (_, indexRow)=>(
-                <div style={{ display: 'flex' }} key={indexRow}>
-                    {Array.from({ length: matrixSize.columns }, (_, indexColumn)=>(
-                    <input
-                        key={`${indexRow}-${indexColumn}`}
-                        type="text"
-                        defaultValue={null}
-                        name={`${indexRow},${indexColumn}`}
-                    />
-                    ))}
-                </div>
-                ))}
-
-                <br/>
-                {Array.from({ length: matrixSize.rows }, (_, indexRow) => (
-                    <div style={{ display: 'flex' }} key={indexRow}>
+            <br/>
+            
+            {matrix.map((row, rowIndex) => (
+                <div key={rowIndex}>
+                    {row.map((value, colIndex) => (
                         <input
-                            key={`${indexRow}-0`}
-                            type="text"
-                            defaultValue={null}
-                            name={`secondMatrix${indexRow}`}
+                            key={colIndex}
+                            type="number"
+                            value={matrix[rowIndex][colIndex]}
+                            onChange={(e) => handlematA(rowIndex, colIndex, e.target.value)}
                         />
-                    </div>
-                ))}
-                <br/>
-                <input type="number" value={precis} onChange={handleSetPrecis}/><br/>
+                    ))}          
+                </div> 
+            ))}
 
-                <button type="submit">Calculated</button>
-            </form>
+            {matrix.map((row, rowIndex) => (
+                <div>
+                    <input
+                        type="number"
+                        value={B[rowIndex]}
+                        onChange={(e) => handlematB(rowIndex, e.target.value)}
+                    />
+                    <br/>
+                </div>  
+            ))}
+
+
+            <br/>
+            <input type="number" value={precis} onChange={handleSetPrecis}/><br/>
+
+            <button type="submit">Calculated</button>
 
             <br /><br />
             <div>{result}</div>
@@ -162,4 +155,4 @@ const CramerRule = () => {
         );
 };
 
-export default CramerRule;
+export default GaussJordan;

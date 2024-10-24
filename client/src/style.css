@@ -29,4 +29,42 @@ body{
         top: -50px;
         left: 10%;
     }
+
+    .matrix-input {
+        width: 60%;
+        padding: 5px;
+        margin-right: 5px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .right{
+        display: flex;
+    }
+
+    .matrix-A{
+        display: flex;
+        flex-direction: column; 
+    }
+
+    .matrix-B{
+        display: flex;
+        flex-direction: column; 
+    }
+
+    .matrix-input {
+        margin: 5px;
+    }
+
+
+    .matrix-container {
+        display: flex; /* ใช้ flexbox สำหรับจัดเรียง Matrix A และ Matrix B ข้างกัน */
+        justify-content: space-between; /* จัดวางให้มีพื้นที่ระหว่าง Matrix A และ B */
+        align-items: flex-start; /* จัดให้แต่ละแถวของ A และ B อยู่บนแกนเดียวกัน */
+        gap: 20px; /* เพิ่มช่องว่างระหว่าง Matrix A และ B */
+    }
+
+    
 }

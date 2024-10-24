@@ -13,6 +13,7 @@ import Secant from './method/rootEquation/secant';
 
 /////linearAlgebra
 import CramerRule from './method/linearAlgebra/cramerRule';
+import GaussJordan from './method/linearAlgebra/gaussJordan';
 
 
 /////Iterpolation
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: "/CramerRule",
     element: <CramerRule/>,
+  },
+  {
+    path: "/GaussJordan",
+    element: <GaussJordan/>,
   },
   {
     path: "/Lagrange",

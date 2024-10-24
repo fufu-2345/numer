@@ -3,7 +3,7 @@ import mysql from "mysql";
 import cors from "cors";
 
 const app = express();
-const port =5040;
+const port =5000;
 app.use(cors());
 
 //  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Abc810254795342320121448';
@@ -15,16 +15,16 @@ const db= mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "Abc810254795342320121448",
-    database: "rooteqution"
+    database: "linearAlgebra"
 })
  
 app.get('/', (req, res) => {  
-    res.json('this is false newtonRap');
+    res.json('this is cramer rule');
 });
 
 
-app.get("/newtonRap", (req,res) =>{
-    const a = "SELECT id FROM newtonRap";
+app.get("/cramerrule", (req,res) =>{
+    const a = "SELECT id FROM cramerrule";
 
     db.query(a,(err,data) =>{
 
@@ -35,14 +35,15 @@ app.get("/newtonRap", (req,res) =>{
 })
 
 
-app.get("/newtonRap/id", (req,res) =>{
+app.get("/cramerrule/id", (req,res) =>{
     const selectedId = req.query.selectedId;
 
     const response = {
         selectedId: selectedId
     };
 
-    const a = `SELECT * FROM newtonrap WHERE id = ?`;
+    //
+    const a = `SELECT * FROM cramerrule WHERE id = ?`;
     db.query(a,[selectedId],(err,data) =>{
         if(err) return res.json(err);
         return res.json(data);

@@ -3,7 +3,7 @@ import mysql from "mysql";
 import cors from "cors";
 
 const app = express();
-const port =5030;
+const port =5040;
 app.use(cors());
 
 //  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Abc810254795342320121448';
@@ -19,12 +19,12 @@ const db= mysql.createConnection({
 })
  
 app.get('/', (req, res) => {  
-    res.json('this is false onepoint');
+    res.json('this is newtonRap');
 });
 
 
-app.get("/onepoint", (req,res) =>{
-    const a = "SELECT id FROM onepoint";
+app.get("/newtonRap", (req,res) =>{
+    const a = "SELECT id FROM newtonRap";
 
     db.query(a,(err,data) =>{
 
@@ -35,14 +35,14 @@ app.get("/onepoint", (req,res) =>{
 })
 
 
-app.get("/onepoint/id", (req,res) =>{
+app.get("/newtonRap/id", (req,res) =>{
     const selectedId = req.query.selectedId;
 
     const response = {
         selectedId: selectedId
     };
 
-    const a = `SELECT * FROM onepoint WHERE id = ?`;
+    const a = `SELECT * FROM newtonrap WHERE id = ?`;
     db.query(a,[selectedId],(err,data) =>{
         if(err) return res.json(err);
         return res.json(data);
