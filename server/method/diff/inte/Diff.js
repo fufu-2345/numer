@@ -12,13 +12,6 @@ app.use(cors());
 
 
 // http://localhost:5320/diff?method=diff
-
-const db= mysql.createConnection({  
-    host: "localhost",
-    user: "root",
-    password: "Abc810254795342320121448",
-    database: "diff/inte"
-})
  
 app.get('/', (req, res) => {  
     res.json('this is diff');
@@ -26,8 +19,17 @@ app.get('/', (req, res) => {
 
 
 app.get("/diff", (req,res) =>{
-    const a = "SELECT id FROM diff";
+    const tableName = req.query.tableName;
+    const getShema = req.query.getShema;
 
+    const db= mysql.createConnection({  
+        host: "localhost",
+        user: "root",
+        password: "Abc810254795342320121448",
+        database: `${getShema}`
+    })
+
+    const a = `SELECT id FROM ${tableName}`;
     db.query(a,(err,data) =>{
 
         if(err) return res.json(err);
@@ -39,12 +41,22 @@ app.get("/diff", (req,res) =>{
 
 app.get("/diff/id", (req,res) =>{
     const selectedId = req.query.selectedId;
+    const tableName = req.query.tableName;
+    const getShema = req.query.getShema;
+
+    const db= mysql.createConnection({  
+        host: "localhost",
+        user: "root",
+        password: "Abc810254795342320121448",
+        database: `${getShema}`
+    })
 
     const response = {
         selectedId: selectedId
     };
+    
 
-    const a = `SELECT * FROM diff WHERE id = ?`;
+    const a = `SELECT * FROM ${tableName} WHERE id = ?`;
     db.query(a,[selectedId],(err,data) =>{
         if(err) return res.json(err);
         return res.json(data);

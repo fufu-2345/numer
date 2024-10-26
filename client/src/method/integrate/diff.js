@@ -16,16 +16,21 @@ const Diff = () => {
     const [x, setX] = useState(parseFloat(2));
     const [h, setH] = useState(parseFloat(0.25));
     const [n, setN] = useState(parseFloat(1));
+    const [selectedId, setSelectedId] = useState("");
+    const [ids, setIds] = useState([]);
     let tri1=[];
     let tri2=[];
     let tri3=[];
-    const [selectedId, setSelectedId] = useState("");
-    const [ids, setIds] = useState([]);
-
+    const getShema="diff/inte";
+    const tableName="diff";
 
     const handleTEST=function(event){
+        
         axios.get('http://localhost:5320/diff/id' ,{
-            params: { selectedId }
+            params: { selectedId ,
+                    tableName,
+                    getShema
+            }
         })
         .then((response) => {
             console.log("API response:", response.data);
@@ -50,7 +55,11 @@ const Diff = () => {
     useEffect(() => {
         const fetchIds = async () => {
             try {
-                const response = await axios.get('http://localhost:5320/diff');
+                const response = await axios.get('http://localhost:5320/diff',{
+                    params: {tableName,
+                            getShema
+                    }
+                })
                 setIds(response.data);
             } catch (error) {
                 console.error('Error fetching idCramer:', error);
