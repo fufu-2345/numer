@@ -17,11 +17,16 @@ const Simpson = () => {
     const [n, setN] = useState(2);
     const [selectedId, setSelectedId] = useState("");
     const [ids, setIds] = useState([]);
+    const getShema="diff/inte";
+    const tableName="simpson";
 
 
     const handleTEST=function(event){
-        axios.get('http://localhost:5310/simpson/id' ,{
-            params: { selectedId }
+        axios.get('http://localhost:5000/getData' ,{
+            params: { selectedId ,
+                tableName,
+                getShema
+        }
         })
         .then((response) => {
             console.log("API response:", response.data);
@@ -44,7 +49,11 @@ const Simpson = () => {
     useEffect(() => {
         const fetchIds = async () => {
             try {
-                const response = await axios.get('http://localhost:5310/simpson');
+                const response = await axios.get('http://localhost:5000/getTableid',{
+                params: {tableName,
+                        getShema
+                    }
+                })
                 setIds(response.data);
             } catch (error) {
                 console.error('Error fetching idCramer:', error);

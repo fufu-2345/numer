@@ -25,8 +25,7 @@ const Diff = () => {
     const tableName="diff";
 
     const handleTEST=function(event){
-        
-        axios.get('http://localhost:5320/diff/id' ,{
+        axios.get('http://localhost:5000/getData' ,{
             params: { selectedId ,
                     tableName,
                     getShema
@@ -55,7 +54,7 @@ const Diff = () => {
     useEffect(() => {
         const fetchIds = async () => {
             try {
-                const response = await axios.get('http://localhost:5320/diff',{
+                const response = await axios.get('http://localhost:5000/getTableid',{
                     params: {tableName,
                             getShema
                     }

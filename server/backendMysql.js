@@ -3,7 +3,7 @@ import mysql from "mysql";
 import cors from "cors";
 
 const app = express();
-const port =5320;
+const port =5000;
 app.use(cors());
 
 //  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Abc810254795342320121448';
@@ -14,11 +14,11 @@ app.use(cors());
 // http://localhost:5320/diff?method=diff
  
 app.get('/', (req, res) => {  
-    res.json('this is diff');
+    res.json('11111111');
 });
 
 
-app.get("/diff", (req,res) =>{
+app.get("/getTableid", (req,res) =>{
     const tableName = req.query.tableName;
     const getShema = req.query.getShema;
 
@@ -39,7 +39,7 @@ app.get("/diff", (req,res) =>{
 })
 
 
-app.get("/diff/id", (req,res) =>{
+app.get("/getData", (req,res) =>{
     const selectedId = req.query.selectedId;
     const tableName = req.query.tableName;
     const getShema = req.query.getShema;
